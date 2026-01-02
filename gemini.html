@@ -2,16 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JOE HUB</title>
+  <title>JOE HUB - Dashboard</title>
   <style>
-    :root { --primary: #6c9cff; --bg: #0f1220; --card-bg: #1a1f35; --text: #eaeefc; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); 
-      min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+    /* Dynamic Variables - Controlled by the Theme Engine */
+    :root { 
+      --primary: #6c9cff; 
+      --bg: #0f1220; 
+      --card-bg: #1a1f35; 
+      --text: #eaeefc; 
     }
 
-    /* Floating Admin Button - Top Right */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: 'Segoe UI', sans-serif; 
+      background: var(--bg); 
+      color: var(--text); 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      padding: 20px;
+      transition: background 0.5s ease; /* Smooth color transitions */
+    }
+
+    /* Admin Gear Icon */
     #adminBtn {
       position: fixed;
       top: 20px;
@@ -22,7 +37,7 @@
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      display: none; /* Hidden by default */
+      display: none; 
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
@@ -31,36 +46,44 @@
       box-shadow: 0 0 10px rgba(108, 156, 255, 0.2);
       z-index: 1000;
     }
-    #:hover {
-      transform: rotate(90deg);
-      background: var(--primary);
-      color: var(--bg);
-      box-shadow: 0 0 20px rgba(108, 156, 255, 0.5);
-    }
+    #adminBtn:hover { transform: rotate(90deg); background: var(--primary); color: var(--bg); }
 
-    .brand-header { margin-top: 20px; font-size: 3rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 8px rgba(108,156,255,0.3); }
+    .brand-header { margin-top: 20px; font-size: 3rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 4px; }
+    
     .top-section { text-align: center; margin-bottom: 30px; }
     #clock { font-size: 2.5rem; font-weight: bold; }
     
     .dashboard-grid { 
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; 
-      width: 100%; max-width: 900px; margin-bottom: 40px; 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 20px; 
+      width: 100%; 
+      max-width: 900px; 
+      margin-bottom: 40px; 
     }
-    .nav-card { 
-      background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); 
-      border-radius: 15px; padding: 25px; text-decoration: none; color: white; 
-      display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.3s; 
-    }
-    .nav-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px var(--glow); border-color: var(--glow); }
-    .sports { --glow: rgba(255, 71, 87, 0.4); } .games { --glow: rgba(46, 213, 115, 0.4); } .videos { --glow: rgba(255, 165, 2, 0.4); }
-    .movies { --glow: rgba(155, 89, 182, 0.4); } .pics { --glow: rgba(232, 67, 147, 0.4); } .libs { --glow: rgba(30, 144, 255, 0.4); }
 
-    .sticky-note { width: 100%; max-width: 900px; background: linear-gradient(135deg, #ff00ff, #7a00ff); padding: 20px; border-radius: 15px; margin-bottom: 40px; }
-    textarea { width: 100%; background: rgba(255,255,255,0.1); border: none; border-radius: 8px; padding: 10px; color: white; resize: none; outline: none; }
+    .nav-card { 
+      background: var(--card-bg); 
+      border: 1px solid rgba(255,255,255,0.1); 
+      border-radius: 15px; 
+      padding: 25px; 
+      text-decoration: none; 
+      color: white; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 10px; 
+      transition: 0.3s; 
+    }
+    .nav-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+    /* Sticky Note Area */
+    .sticky-note { width: 100%; max-width: 900px; background: var(--primary); padding: 20px; border-radius: 15px; margin-bottom: 40px; color: #000; }
+    textarea { width: 100%; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; padding: 10px; color: #000; resize: none; outline: none; margin-top: 10px; font-weight: bold;}
     
     footer { display: flex; gap: 15px; margin-top: auto; padding-bottom: 20px; }
-    .btn { padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; }
-    .back-btn { background: #2b2f45; color: var(--primary); border: 1px solid var(--primary); }
+    .btn { padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; transition: 0.3s; }
+    .back-btn { background: var(--card-bg); color: var(--primary); border: 1px solid var(--primary); }
     .quit-btn { background: #442b2b; color: #ff6c6c; border: 1px solid #ff6c6c; }
 
     @media (max-width: 700px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -68,27 +91,28 @@
 </head>
 <body>
 
- <div id="adminBtn" title="Admin Settings" onclick="location.href='admin.html'">⚙️</div>
+  <div id="adminBtn" title="Admin Settings" onclick="location.href='admin.html'">⚙️</div>
 
   <h1 class="brand-header">JOE HUB</h1>
+  
   <div class="top-section">
     <div id="clock">00:00:00</div>
     <p>Operator: <span id="userName" style="color:var(--primary); font-weight:bold;">User</span></p>
     <p id="statusDisplay" style="font-style: italic; color: #aab4d4; font-size: 0.9rem;"></p>
   </div>
 
-  <div class="dashboard-grid">
-    <a href="https://www.espn.com" target="_blank" class="nav-card sports"><span>⚽</span><b>Sports</b></a>
-    <a href="https://poki.com" target="_blank" class="nav-card games"><span>🎮</span><b>Games</b></a>
-    <a href="https://www.youtube.com" target="_blank" class="nav-card videos"><span>🎬</span><b>Videos</b></a>
-    <a href="https://www.imdb.com" target="_blank" class="nav-card movies"><span>📽️</span><b>Movies</b></a>
-    <a href="https://www.pexels.com" target="_blank" class="nav-card pics"><span>📸</span><b>Pictures</b></a>
-    <a href="https://en.wikipedia.org" target="_blank" class="nav-card libs"><span>📚</span><b>Libraries</b></a>
+  <div class="dashboard-grid" id="mainGrid">
+    <a href="https://www.espn.com" target="_blank" class="nav-card"><span>⚽</span><b>Sports</b></a>
+    <a href="https://poki.com" target="_blank" class="nav-card"><span>🎮</span><b>Games</b></a>
+    <a href="https://www.youtube.com" target="_blank" class="nav-card"><span>🎬</span><b>Videos</b></a>
+    <a href="https://www.imdb.com" target="_blank" class="nav-card"><span>📽️</span><b>Movies</b></a>
+    <a href="https://www.pexels.com" target="_blank" class="nav-card"><span>📸</span><b>Pictures</b></a>
+    <a href="https://en.wikipedia.org" target="_blank" class="nav-card"><span>📚</span><b>Libraries</b></a>
   </div>
 
   <div class="sticky-note">
-    <strong>📌 Quick Notes:</strong>
-    <textarea id="noteArea" rows="3"></textarea>
+    <strong>📌 System Notes:</strong>
+    <textarea id="noteArea" rows="3" placeholder="Type notes here..."></textarea>
   </div>
 
   <footer>
@@ -97,25 +121,62 @@
   </footer>
 
   <script>
-    function updateClock() { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
-    setInterval(updateClock, 1000); updateClock();
+    // --- 1. THEME ENGINE ---
+    const themes = {
+      hacker: { primary: '#2ed573', bg: '#001a00', card: '#002600' },
+      lava: { primary: '#ff4757', bg: '#1a0505', card: '#2d0a0a' },
+      neon: { primary: '#ff00ff', bg: '#120012', card: '#240024' },
+      default: { primary: '#6c9cff', bg: '#0f1220', card: '#1a1f35' }
+    };
+
+    function applyTheme() {
+      const savedTheme = localStorage.getItem('hubTheme') || 'default';
+      const config = themes[savedTheme];
+      document.documentElement.style.setProperty('--primary', config.primary);
+      document.documentElement.style.setProperty('--bg', config.bg);
+      document.documentElement.style.setProperty('--card-bg', config.card);
+    }
+
+    // --- 2. DYNAMIC LINK LOADER ---
+    function loadCustomLinks() {
+      const customLinks = JSON.parse(localStorage.getItem('customLinks') || '[]');
+      const grid = document.getElementById('mainGrid');
+      customLinks.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link.url;
+        a.target = "_blank";
+        a.className = "nav-card";
+        a.innerHTML = `<span>🔗</span><b>${link.name}</b>`;
+        grid.appendChild(a);
+      });
+    }
+
+    // --- 3. CLOCK & INITIALIZATION ---
+    function updateClock() { 
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString(); 
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
+      applyTheme();
+      loadCustomLinks();
+      setInterval(updateClock, 1000); 
+      updateClock();
+
+      // User Data
       document.getElementById('userName').textContent = localStorage.getItem('storedUsername') || 'Guest';
-      
       const status = localStorage.getItem('userStatus');
       if(status) document.getElementById('statusDisplay').textContent = `"${status}"`;
 
-      // SHOW ADMIN GEAR ONLY IF ROLE IS ADMIN
+      // Security Check for Admin Gear
       if(localStorage.getItem('userRole') === 'admin') {
         document.getElementById('adminBtn').style.display = 'flex';
       }
 
+      // Sticky Notes Logic
       const note = document.getElementById('noteArea');
       note.value = localStorage.getItem('userNote') || '';
       note.addEventListener('input', () => localStorage.setItem('userNote', note.value));
     });
   </script>
 </body>
-
 </html>
