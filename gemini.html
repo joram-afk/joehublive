@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JOE HUB - Ultimate</title>
+  <title>JOE HUB - Universal</title>
   <style>
     :root { --primary: #6c9cff; --bg: #0f1220; --card-bg: rgba(26, 31, 53, 0.9); --text: #eaeefc; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,7 +51,7 @@
     .nav-card:hover { transform: translateY(-5px); border-color: var(--primary); background: rgba(108, 156, 255, 0.2); }
     .nav-card span { font-size: 2rem; }
 
-    .sticky-note { width: 100%; max-width: 900px; background: var(--primary); padding: 20px; border-radius: 15px; margin-bottom: 40px; color: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+    .sticky-note { width: 100%; max-width: 900px; background: var(--primary); padding: 20px; border-radius: 15px; margin-bottom: 40px; color: #000; }
     textarea { width: 100%; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; padding: 10px; color: #000; resize: none; outline: none; margin-top: 10px; font-weight: bold;}
 
     footer { display: flex; gap: 15px; margin-top: auto; padding-bottom: 20px; }
@@ -72,14 +72,13 @@
   </div>
 
   <div class="search-box">
-    <input type="text" class="search-input" id="searchInput" placeholder="Search Google...">
-    <button class="search-btn" onclick="performSearch()">SEARCH</button>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search or Enter URL...">
+    <button class="search-btn" onclick="performSearch()">GO</button>
   </div>
 
   <div class="dashboard-grid" id="mainGrid">
     <a href="https://www.youtube.com" target="_blank" class="nav-card"><span>🎬</span><b>YouTube</b></a>
     <a href="https://poki.com" target="_blank" class="nav-card"><span>🎮</span><b>Games</b></a>
-    <a href="https://www.google.com" target="_blank" class="nav-card"><span>🔍</span><b>Google</b></a>
   </div>
 
   <div class="sticky-note">
@@ -89,66 +88,82 @@
 
   <footer>
     <button class="btn back-btn" onclick="location.href='candy.html'">BACK</button>
-    <button class="btn quit-btn" onclick="localStorage.clear(); location.href='index.html'">LOGOUT</button>
+    <button class="btn quit-btn" onclick="logout()">LOGOUT</button>
   </footer>
 
   <script>
-    // --- SOUND ENGINE ---
+    // --- 1. SEARCH & SMART REDIRECT ---
+    function performSearch() {
+      let q = document.getElementById('searchInput').value;
+      if (!q) return;
+
+      // Smart URL check
+      if (q.includes('.') && !q.startsWith('http')) {
+        q = 'https://' + q;
+      }
+
+      if (q.startsWith('http')) {
+        window.open(q, '_blank');
+      } else {
+        window.open('https://www.google.com/search?q=' + q, '_blank');
+      }
+      document.getElementById('searchInput').value = '';
+    }
+
+    // --- 2. SOUND ENGINE ---
     function playSfx(freq) {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = 'sine'; osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.1);
       osc.connect(gain); gain.connect(ctx.destination);
       osc.start(); osc.stop(ctx.currentTime + 0.1);
     }
 
-    // --- INITIALIZE ---
+    // --- 3. INITIALIZE ---
     document.addEventListener('DOMContentLoaded', () => {
-      // Background Loader
+      // Background
       const bg = localStorage.getItem('hubWallpaper');
-      if(bg) {
-        document.body.style.backgroundImage = `linear-gradient(rgba(15,18,32,0.7), rgba(15,18,32,0.7)), url('${bg}')`;
-      }
+      if(bg) document.body.style.backgroundImage = `linear-gradient(rgba(15,18,32,0.7), rgba(15,18,32,0.7)), url('${bg}')`;
 
-      // Load Links
+      // LOAD CUSTOM LINKS (Done for both Admin and Guest)
       const links = JSON.parse(localStorage.getItem('customLinks') || '[]');
       const grid = document.getElementById('mainGrid');
       links.forEach(l => {
         const a = document.createElement('a');
-        a.href = l.url; a.target = "_blank"; a.className = "nav-card";
+        a.href = l.url.startsWith('http') ? l.url : 'https://' + l.url;
+        a.target = "_blank";
+        a.className = "nav-card";
         a.innerHTML = `<span>🌐</span><b>${l.name}</b>`;
         grid.appendChild(a);
       });
 
-      // User Data
+      // User Logic
       document.getElementById('userName').textContent = localStorage.getItem('storedUsername') || 'Guest';
-      if(localStorage.getItem('userRole') === 'admin') document.getElementById('adminBtn').style.display = 'flex';
+      
+      // Hidden Admin Key Check
+      if(localStorage.getItem('userRole') === 'admin') {
+        document.getElementById('adminBtn').style.display = 'flex';
+      }
 
-      // Sound Attachments
+      // Notes
+      const note = document.getElementById('noteArea');
+      note.value = localStorage.getItem('userNote') || '';
+      note.addEventListener('input', () => localStorage.setItem('userNote', note.value));
+
+      // Sounds
       document.querySelectorAll('button, .nav-card').forEach(el => {
         el.addEventListener('click', () => playSfx(400));
         el.addEventListener('mouseenter', () => playSfx(800));
       });
     });
 
-   function performSearch() {
-  let q = document.getElementById('searchInput').value;
-  if (!q) return;
-
-  // If it's a website (contains a dot like .com) and lacks https
-  if (q.includes('.') && !q.startsWith('http')) {
-    q = 'https://' + q;
-  }
-
-  // If it's just a word, search Google. If it's a URL, go to the site.
-  if (q.startsWith('http')) {
-    window.open(q, '_blank');
-  } else {
-    window.open('https://www.google.com/search?q=' + q, '_blank');
-  }
-}
+    function logout() {
+        // Clear specific role so Guest can't see Admin gear next time
+        localStorage.removeItem('userRole'); 
+        location.href='index.html';
+    }
+  </script>
 </body>
 </html>
-
