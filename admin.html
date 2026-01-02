@@ -2,42 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel - JOE HUB</title>
+  <title>Admin Control - JOE HUB</title>
   <style>
     :root { --primary: #6c9cff; --bg: #0b0e1a; --card: #161b33; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-    .admin-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 400px; text-align: center; }
-    .status-indicator { display: inline-block; width: 12px; height: 12px; background: #2ed573; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #2ed573; }
-    .control-group { margin: 20px 0; text-align: left; }
-    label { font-size: 0.8rem; color: #aab4d4; }
-    input { width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; margin-top: 5px; }
-    .btn { width: 100%; padding: 12px; margin-top: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; display: flex; justify-content: center; }
+    .admin-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 500px; }
+    h2 { color: var(--primary); margin-bottom: 20px; text-align: center; }
+    .section { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+    label { font-size: 0.8rem; color: #aab4d4; display: block; margin-bottom: 5px; }
+    input, select { width: 100%; padding: 10px; background: #0b0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; margin-bottom: 10px; }
+    .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
     .save-btn { background: var(--primary); color: #0b0e1a; }
-    .back-btn { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
+    .back-btn { background: transparent; color: #aab4d4; border: 1px solid #aab4d4; margin-top: 15px; }
+    .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   </style>
 </head>
 <body>
   <div class="admin-card">
-    <h2>⚙️ SYSTEM CONTROL</h2>
-    <p style="margin: 10px 0;"><span class="status-indicator"></span>SYSTEM ONLINE</p>
-    <hr style="opacity: 0.1; margin: 20px 0;">
-    
-    <div class="control-group">
-      <label>Override Username</label>
-      <input type="text" id="newUsername" placeholder="Enter new name...">
+    <h2>⚙️ MASTER CONTROL</h2>
+
+    <div class="section">
+      <label>SYSTEM THEME</label>
+      <div class="theme-grid">
+        <button class="btn" style="background:#6c9cff; color:black" onclick="setTheme('default')">Cyber Blue</button>
+        <button class="btn" style="background:#2ed573; color:black" onclick="setTheme('hacker')">Matrix Green</button>
+        <button class="btn" style="background:#ff4757; color:black" onclick="setTheme('lava')">Lava Red</button>
+        <button class="btn" style="background:#ff00ff; color:black" onclick="setTheme('neon')">Vaporwave</button>
+      </div>
     </div>
 
-    <button class="save-btn btn" onclick="saveSettings()">APPLY CHANGES</button>
+    <div class="section">
+      <label>ADD CUSTOM LINK</label>
+      <input type="text" id="linkName" placeholder="Site Name (e.g. Discord)">
+      <input type="text" id="linkUrl" placeholder="URL (https://...)">
+      <button class="save-btn btn" onclick="addLink()">➕ ADD TO DASHBOARD</button>
+    </div>
+
     <button class="back-btn btn" onclick="location.href='gemini.html'">RETURN TO HUB</button>
   </div>
 
   <script>
-    function saveSettings() {
-      const name = document.getElementById('newUsername').value;
-      if(name) {
-        localStorage.setItem('storedUsername', name);
-        alert('System Profile Updated!');
-        location.href = 'gemini.html';
+    function setTheme(theme) {
+      localStorage.setItem('hubTheme', theme);
+      alert('Theme set to ' + theme + '! Refreshing Hub...');
+    }
+
+    function addLink() {
+      const name = document.getElementById('linkName').value;
+      const url = document.getElementById('linkUrl').value;
+      if(name && url) {
+        let links = JSON.parse(localStorage.getItem('customLinks') || '[]');
+        links.push({name, url});
+        localStorage.setItem('customLinks', JSON.stringify(links));
+        alert('Link added!');
+        document.getElementById('linkName').value = '';
+        document.getElementById('linkUrl').value = '';
       }
     }
   </script>
