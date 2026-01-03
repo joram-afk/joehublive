@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JOE HUB - Login</title>
+    <title>JOE HUB - Global Login</title>
     <style>
         body { margin: 0; background: black; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-size: cover; background-position: center; }
         canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
@@ -11,12 +11,11 @@
             background: rgba(11, 14, 26, 0.95); padding: 40px; border: 1px solid #00ff41;
             border-radius: 15px; text-align: center; box-shadow: 0 0 30px rgba(0,255,65,0.3); z-index: 10; width: 320px; backdrop-filter: blur(10px);
         }
-        h2 { color: #00ff41; margin-bottom: 25px; letter-spacing: 3px; font-size: 1.2rem; }
+        h2 { color: #00ff41; margin-bottom: 25px; letter-spacing: 3px; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #00ff41; border-radius: 8px; outline: none; box-sizing: border-box; }
         .btn { width: 100%; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; transition: 0.3s; margin-bottom: 10px; }
         .primary-btn { background: #00ff41; color: #000; }
         .guest-btn { background: transparent; color: #888; border: 1px solid #333; }
-        .guest-btn:hover { color: white; border-color: white; }
     </style>
 </head>
 <body>
@@ -24,20 +23,32 @@
     <div class="login-box">
         <h2>SYSTEM ACCESS</h2>
         <input type="text" id="user" placeholder="Enter Name">
-        <input type="password" id="pass" placeholder="Admin Key (Optional for Guest)">
+        <input type="password" id="pass" placeholder="Admin Key">
         <button class="btn primary-btn" onclick="login('admin')">ADMIN LOGIN</button>
         <button class="btn guest-btn" onclick="login('guest')">GUEST ACCESS</button>
     </div>
 
     <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        const savedBg = localStorage.getItem('hubWallpaper');
+        // CONFIG - ADD YOUR KEYS HERE
+        const BIN_ID = 'REPLACE_WITH_YOUR_BIN_ID';
+        const MASTER_KEY = 'REPLACE_WITH_YOUR_MASTER_KEY';
 
-        if (savedBg) {
-            document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${savedBg}')`;
-            canvas.style.display = "none"; 
-        } else {
+        async function init() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': MASTER_KEY }
+                });
+                const data = await res.json();
+                if (data.record.wallpaper) {
+                    document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${data.record.wallpaper}')`;
+                    document.getElementById('matrix').style.display = 'none';
+                } else { startMatrix(); }
+            } catch(e) { startMatrix(); }
+        }
+
+        function startMatrix() {
+            const canvas = document.getElementById('matrix');
+            const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             const letters = "01010101CODEJOE"; const fontSize = 16;
             const columns = canvas.width / fontSize; const drops = Array(Math.floor(columns)).fill(1);
@@ -57,18 +68,16 @@
         function login(mode) {
             const user = document.getElementById('user').value || "Guest";
             const pass = document.getElementById('pass').value;
-            if (mode === 'admin') {
-                if (pass === 'joram') {
-                    localStorage.setItem('userRole', 'admin');
-                    localStorage.setItem('storedUsername', user);
-                    location.href = 'gemini.html';
-                } else { alert('ACCESS DENIED'); }
-            } else {
-                localStorage.setItem('userRole', 'guest');
-                localStorage.setItem('storedUsername', user);
+            localStorage.setItem('storedUsername', user);
+            if (mode === 'admin' && pass === 'joram') {
+                localStorage.setItem('userRole', 'admin');
                 location.href = 'gemini.html';
-            }
+            } else if (mode === 'guest') {
+                localStorage.setItem('userRole', 'guest');
+                location.href = 'gemini.html';
+            } else { alert('Access Denied'); }
         }
+        init();
     </script>
 </body>
 </html>
