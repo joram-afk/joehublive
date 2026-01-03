@@ -2,90 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Control Panel</title>
+  <title>Admin - Global Control</title>
   <style>
     :root { --primary: #6c9cff; --bg: #0b0e1a; --card: #161b33; }
     body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; display: flex; justify-content: center; background-size: cover; background-position: center; }
     .admin-card { background: rgba(22, 27, 51, 0.95); padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 450px; backdrop-filter: blur(10px); }
     .section { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-    label { font-size: 0.8rem; color: #aab4d4; display: block; margin-bottom: 5px; }
     input { width: 100%; padding: 10px; background: #000; border: 1px solid #333; border-radius: 8px; color: white; margin-bottom: 10px; outline: none; box-sizing: border-box; }
     .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
     .save-btn { background: var(--primary); color: #0b0e1a; }
-    .back-btn { background: transparent; color: #aab4d4; border: 1px solid #aab4d4; margin-top: 15px; }
     .link-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(0,0,0,0.3); margin-top: 5px; border-radius: 5px; }
-    .del-btn { background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; }
+    .del-btn { background: #ff4757; color: white; padding: 5px; border-radius: 5px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="admin-card">
-    <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">⚙️ MASTER CONTROL</h2>
-
+    <h2 style="text-align:center; color:var(--primary);">🌍 GLOBAL CONTROL</h2>
     <div class="section">
-      <label>GLOBAL WALLPAPER URL</label>
-      <input type="text" id="bgUrl" placeholder="Paste image link...">
-      <button class="save-btn btn" onclick="saveBg()">APPLY TO ALL USERS</button>
+      <label>Wallpaper URL</label>
+      <input type="text" id="bgUrl">
+      <button class="save-btn btn" onclick="saveBg()">UPDATE GLOBALLY</button>
     </div>
-
     <div class="section">
-      <label>ADD LINK FOR ALL USERS</label>
-      <input type="text" id="linkName" placeholder="Site Name">
-      <input type="text" id="linkUrl" placeholder="https://...">
-      <button class="save-btn btn" onclick="addLink()">ADD TO HUB</button>
+      <label>New Link</label>
+      <input type="text" id="linkName" placeholder="Name">
+      <input type="text" id="linkUrl" placeholder="URL">
+      <button class="save-btn btn" onclick="addLink()">ADD FOR EVERYONE</button>
     </div>
-
-    <div class="section">
-      <label>MANAGE / DELETE LINKS</label>
-      <div id="deleteList"></div>
-    </div>
-
-    <button class="back-btn btn" onclick="location.href='gemini.html'">RETURN TO HUB</button>
+    <div class="section"><div id="deleteList"></div></div>
+    <button class="btn" onclick="location.href='gemini.html'">RETURN</button>
   </div>
 
   <script>
-    // SECURITY CHECK: If not admin, kick them out
-    if(localStorage.getItem('userRole') !== 'admin') {
-        alert("ACCESS DENIED: Admins only.");
-        location.href = 'gemini.html';
+    const BIN_ID = 'REPLACE_WITH_YOUR_BIN_ID';
+    const MASTER_KEY = 'REPLACE_WITH_YOUR_MASTER_KEY';
+
+    async function getCloud() {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': MASTER_KEY } });
+        const json = await res.json(); return json.record;
     }
 
-    function saveBg() {
-      const url = document.getElementById('bgUrl').value;
-      if(url) { localStorage.setItem('hubWallpaper', url); location.reload(); }
+    async function updateCloud(newData) {
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY },
+            body: JSON.stringify(newData)
+        });
+        location.reload();
     }
 
-    function renderDeleteList() {
-      const listDiv = document.getElementById('deleteList');
-      const links = JSON.parse(localStorage.getItem('customLinks') || '[]');
-      listDiv.innerHTML = links.map((link, i) => `
-        <div class="link-item">
-          <span>${link.name}</span>
-          <button class="del-btn" onclick="deleteLink(${i})">DELETE</button>
-        </div>
-      `).join('');
+    async function saveBg() {
+        const data = await getCloud();
+        data.wallpaper = document.getElementById('bgUrl').value;
+        await updateCloud(data);
     }
 
-    function addLink() {
-      const name = document.getElementById('linkName').value;
-      const url = document.getElementById('linkUrl').value;
-      if(name && url) {
-        let links = JSON.parse(localStorage.getItem('customLinks') || '[]');
-        links.push({name, url});
-        localStorage.setItem('customLinks', JSON.stringify(links));
-        renderDeleteList();
-      }
+    async function addLink() {
+        const data = await getCloud();
+        data.links.push({ name: document.getElementById('linkName').value, url: document.getElementById('linkUrl').value });
+        await updateCloud(data);
     }
 
-    function deleteLink(index) {
-      let links = JSON.parse(localStorage.getItem('customLinks') || '[]');
-      links.splice(index, 1);
-      localStorage.setItem('customLinks', JSON.stringify(links));
-      renderDeleteList();
+    async function deleteLink(idx) {
+        const data = await getCloud();
+        data.links.splice(idx, 1);
+        await updateCloud(data);
     }
 
-    const bg = localStorage.getItem('hubWallpaper');
-    if(bg) document.body.style.backgroundImage = `linear-gradient(rgba(11,14,26,0.8), rgba(11,14,26,0.8)), url('${bg}')`;
-    renderDeleteList();
+    async function init() {
+        const data = await getCloud();
+        const list = document.getElementById('deleteList');
+        list.innerHTML = data.links.map((l, i) => `<div class="link-item">${l.name} <button class="del-btn" onclick="deleteLink(${i})">DEL</button></div>`).join('');
+    }
+    init();
   </script>
 </body>
 </html>
