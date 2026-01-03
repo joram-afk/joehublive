@@ -2,28 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JOE HUB - Access Point</title>
+    <title>JOE HUB - Login</title>
     <style>
-        body { margin: 0; background: black; overflow: hidden; font-family: 'Courier New', monospace; background-size: cover; background-position: center; }
+        body { margin: 0; background: black; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-size: cover; background-position: center; }
         canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
         .login-box {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.85); padding: 40px; border: 2px solid #00ff41;
-            border-radius: 10px; text-align: center; box-shadow: 0 0 20px #00ff41; z-index: 10;
-            backdrop-filter: blur(10px);
+            background: rgba(11, 14, 26, 0.9); padding: 40px; border: 1px solid #00ff41;
+            border-radius: 15px; text-align: center; box-shadow: 0 0 30px rgba(0,255,65,0.2); z-index: 10; width: 320px;
         }
-        h2 { color: #00ff41; margin-bottom: 20px; letter-spacing: 5px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; background: #000; border: 1px solid #00ff41; color: #00ff41; outline: none; }
-        button { background: #00ff41; color: black; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
-        button:hover { background: white; box-shadow: 0 0 15px white; }
+        h2 { color: #00ff41; margin-bottom: 25px; letter-spacing: 3px; font-size: 1.2rem; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #00ff41; border-radius: 8px; outline: none; box-sizing: border-box; }
+        input:focus { border-color: #00ff41; }
+        .btn { width: 100%; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; transition: 0.3s; margin-bottom: 10px; }
+        .primary-btn { background: #00ff41; color: #000; }
+        .guest-btn { background: transparent; color: #888; border: 1px solid #333; }
+        .guest-btn:hover { color: white; border-color: white; }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
     <div class="login-box">
-        <h2>TERMINAL LOGIN</h2>
-        <input type="password" id="pass" placeholder="ACCESS KEY...">
-        <button onclick="checkPass()">INITIALIZE</button>
+        <h2>SYSTEM ACCESS</h2>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Access Key">
+        <button class="btn primary-btn" onclick="login('admin')">INITIALIZE</button>
+        <button class="btn guest-btn" onclick="login('guest')">LOGIN AS GUEST</button>
     </div>
 
     <script>
@@ -32,20 +36,15 @@
         const savedBg = localStorage.getItem('hubWallpaper');
 
         if (savedBg) {
-            document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${savedBg}')`;
+            document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${savedBg}')`;
             canvas.style.display = "none"; 
         } else {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            const fontSize = 16;
-            const columns = canvas.width / fontSize;
-            const drops = Array(Math.floor(columns)).fill(1);
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const letters = "01010101CODEJOE"; const fontSize = 16;
+            const columns = canvas.width / fontSize; const drops = Array(Math.floor(columns)).fill(1);
             function draw() {
-                ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#00ff41";
-                ctx.font = fontSize + "px arial";
+                ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#00ff41"; ctx.font = fontSize + "px monospace";
                 for (let i = 0; i < drops.length; i++) {
                     const text = letters[Math.floor(Math.random() * letters.length)];
                     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
@@ -56,11 +55,21 @@
             setInterval(draw, 33);
         }
 
-        function checkPass() {
-            if(document.getElementById('pass').value === 'joram') {
-                localStorage.setItem('userRole', 'admin');
-                location.href = 'candy.html';
-            } else { alert('ACCESS DENIED'); }
+        function login(mode) {
+            const user = document.getElementById('user').value || "Guest";
+            const pass = document.getElementById('pass').value;
+
+            if (mode === 'admin') {
+                if (pass === 'joram') {
+                    localStorage.setItem('userRole', 'admin');
+                    localStorage.setItem('storedUsername', user);
+                    location.href = 'gemini.html';
+                } else { alert('INVALID KEY'); }
+            } else {
+                localStorage.setItem('userRole', 'guest');
+                localStorage.setItem('storedUsername', 'Guest User');
+                location.href = 'gemini.html';
+            }
         }
     </script>
 </body>
