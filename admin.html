@@ -2,42 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin - JOE HUB</title>
+  <title>Admin - Master Control</title>
   <style>
     :root { --primary: #6c9cff; --bg: #0b0e1a; --card: #161b33; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; display: flex; justify-content: center; }
-    .admin-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 500px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    h2 { color: var(--primary); text-align: center; margin-bottom: 20px; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; display: flex; justify-content: center; background-size: cover; background-position: center; }
+    .admin-card { background: rgba(22, 27, 51, 0.95); padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 500px; backdrop-filter: blur(10px); }
     .section { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-    label { font-size: 0.8rem; color: #aab4d4; display: block; margin-bottom: 5px; }
-    input { width: 100%; padding: 10px; background: #0b0e1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; margin-bottom: 10px; outline: none; }
+    input { width: 100%; padding: 10px; background: #000; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; margin-bottom: 10px; outline: none; }
     .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
     .save-btn { background: var(--primary); color: #0b0e1a; }
+    .reset-btn { background: transparent; color: #ff6c6c; border: 1px solid #ff6c6c; font-size: 0.7rem; margin-top: 10px;}
     .back-btn { background: transparent; color: #aab4d4; border: 1px solid #aab4d4; margin-top: 15px; }
-    .link-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(0,0,0,0.2); margin-top: 5px; border-radius: 5px; font-size: 0.9rem; }
-    .del-btn { background: #ff4757; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="admin-card">
-    <h2>⚙️ MASTER CONTROL</h2>
+    <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">⚙️ HUB SETTINGS</h2>
 
     <div class="section">
-      <label>WALLPAPER URL</label>
-      <input type="text" id="bgUrl" placeholder="Paste image link (.jpg, .png)...">
-      <button class="save-btn btn" onclick="saveBg()">SET BACKGROUND</button>
+      <label>GLOBAL WALLPAPER URL</label>
+      <input type="text" id="bgUrl" placeholder="Paste link to image...">
+      <button class="save-btn btn" onclick="saveBg()">APPLY TO ALL PAGES</button>
+      <button class="reset-btn btn" onclick="resetBg()">RESTORE MATRIX EFFECT</button>
     </div>
 
     <div class="section">
-      <label>ADD LINK</label>
+      <label>ADD CUSTOM LINK</label>
       <input type="text" id="linkName" placeholder="Site Name">
       <input type="text" id="linkUrl" placeholder="https://...">
-      <button class="save-btn btn" onclick="addLink()">➕ ADD TO HUB</button>
-    </div>
-
-    <div class="section">
-      <label>MANAGE LINKS</label>
-      <div id="deleteList"></div>
+      <button class="save-btn btn" onclick="addLink()">ADD LINK</button>
     </div>
 
     <button class="back-btn btn" onclick="location.href='gemini.html'">RETURN TO HUB</button>
@@ -46,19 +39,15 @@
   <script>
     function saveBg() {
       const url = document.getElementById('bgUrl').value;
-      localStorage.setItem('hubWallpaper', url);
-      alert('Wallpaper Updated!');
+      if(url) {
+        localStorage.setItem('hubWallpaper', url);
+        location.reload(); 
+      }
     }
-
-    function renderDeleteList() {
-      const listDiv = document.getElementById('deleteList');
-      const links = JSON.parse(localStorage.getItem('customLinks') || '[]');
-      listDiv.innerHTML = links.map((link, i) => `
-        <div class="link-item"><span>${link.name}</span>
-        <button class="del-btn" onclick="deleteLink(${i})">DEL</button></div>
-      `).join('');
+    function resetBg() {
+      localStorage.removeItem('hubWallpaper');
+      location.reload();
     }
-
     function addLink() {
       const name = document.getElementById('linkName').value;
       const url = document.getElementById('linkUrl').value;
@@ -66,19 +55,12 @@
         let links = JSON.parse(localStorage.getItem('customLinks') || '[]');
         links.push({name, url});
         localStorage.setItem('customLinks', JSON.stringify(links));
-        renderDeleteList();
+        alert('Link Added!');
       }
     }
-
-    function deleteLink(index) {
-      let links = JSON.parse(localStorage.getItem('customLinks') || '[]');
-      links.splice(index, 1);
-      localStorage.setItem('customLinks', JSON.stringify(links));
-      renderDeleteList();
-    }
-
-    document.getElementById('bgUrl').value = localStorage.getItem('hubWallpaper') || '';
-    renderDeleteList();
+    // Load current wallpaper into Admin view
+    const bg = localStorage.getItem('hubWallpaper');
+    if(bg) document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${bg}')`;
   </script>
 </body>
 </html>
