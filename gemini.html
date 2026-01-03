@@ -2,74 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JOE HUB - Universal</title>
+  <title>JOE HUB - Ultimate</title>
   <style>
-    :root { --primary: #6c9cff; --bg: #0f1220; --card-bg: rgba(26, 31, 53, 0.9); --text: #eaeefc; }
+    :root { --primary: #6c9cff; --bg: #0f1220; --card-bg: rgba(26, 31, 53, 0.85); --text: #eaeefc; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body { 
-      font-family: 'Segoe UI', sans-serif; 
-      background: var(--bg); 
-      background-size: cover; 
-      background-attachment: fixed; 
-      background-position: center;
-      color: var(--text); 
-      min-height: 100vh; 
-      display: flex; flex-direction: column; align-items: center; padding: 20px;
-      transition: background 0.5s ease;
+      font-family: 'Segoe UI', sans-serif; background: var(--bg); background-size: cover; background-attachment: fixed; background-position: center;
+      color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
     }
-
-    #adminBtn {
-      position: fixed; top: 20px; right: 20px;
-      background: var(--card-bg); border: 1px solid var(--primary);
-      color: var(--primary); width: 50px; height: 50px; border-radius: 50%;
-      display: none; align-items: center; justify-content: center;
-      font-size: 1.5rem; cursor: pointer; transition: 0.3s; z-index: 1000;
-    }
-    #adminBtn:hover { transform: rotate(90deg); border-color: white; color: white; }
-
-    .header-container { text-align: center; margin-bottom: 20px; width: 100%; max-width: 900px; }
-    .brand { font-size: 3rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 15px rgba(0,0,0,0.5); }
-    
-    .search-box {
-      display: flex; gap: 10px; background: var(--card-bg); padding: 10px;
-      border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);
-      width: 100%; max-width: 600px; margin-bottom: 30px; backdrop-filter: blur(10px);
-    }
+    #adminBtn { position: fixed; top: 20px; right: 20px; background: var(--card-bg); border: 1px solid var(--primary); color: var(--primary); width: 50px; height: 50px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; }
+    .brand { font-size: 3rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 4px; margin-top: 20px;}
+    .search-box { display: flex; gap: 10px; background: var(--card-bg); padding: 10px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 600px; margin: 30px 0; backdrop-filter: blur(10px); }
     .search-input { flex: 1; background: transparent; border: none; color: white; font-size: 1.1rem; outline: none; padding-left: 15px; }
     .search-btn { background: var(--primary); color: #000; border: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; }
-
-    .dashboard-grid { 
-      display: grid; grid-template-columns: repeat(3, 1fr); 
-      gap: 20px; width: 100%; max-width: 900px; margin-bottom: 40px; 
-    }
-    .nav-card { 
-      background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); 
-      border-radius: 15px; padding: 25px; text-decoration: none; color: white; 
-      display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.3s; backdrop-filter: blur(5px);
-    }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; max-width: 900px; }
+    .nav-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 25px; text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.3s; backdrop-filter: blur(5px); }
     .nav-card:hover { transform: translateY(-5px); border-color: var(--primary); background: rgba(108, 156, 255, 0.2); }
-    .nav-card span { font-size: 2rem; }
-
-    .sticky-note { width: 100%; max-width: 900px; background: var(--primary); padding: 20px; border-radius: 15px; margin-bottom: 40px; color: #000; }
-    textarea { width: 100%; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; padding: 10px; color: #000; resize: none; outline: none; margin-top: 10px; font-weight: bold;}
-
-    footer { display: flex; gap: 15px; margin-top: auto; padding-bottom: 20px; }
-    .btn { padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; transition: 0.3s; }
+    .sticky-note { width: 100%; max-width: 900px; background: var(--primary); padding: 20px; border-radius: 15px; margin: 40px 0; color: #000; font-weight: bold; }
+    textarea { width: 100%; background: rgba(255,255,255,0.3); border: none; border-radius: 8px; padding: 10px; margin-top: 10px; outline: none; resize: none; }
+    footer { display: flex; gap: 15px; margin-top: auto; }
+    .btn { padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; }
     .back-btn { background: var(--card-bg); color: var(--primary); border: 1px solid var(--primary); }
     .quit-btn { background: #442b2b; color: #ff6c6c; border: 1px solid #ff6c6c; }
-
     @media (max-width: 700px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
-
   <div id="adminBtn" onclick="location.href='admin.html'">⚙️</div>
-
-  <div class="header-container">
-    <h1 class="brand">JOE HUB</h1>
-    <p>Operator: <span id="userName">User</span></p>
-  </div>
+  <h1 class="brand">JOE HUB</h1>
+  <p>Operator: <span id="userName" style="color:var(--primary);">User</span></p>
 
   <div class="search-box">
     <input type="text" class="search-input" id="searchInput" placeholder="Search or Enter URL...">
@@ -78,39 +39,26 @@
 
   <div class="dashboard-grid" id="mainGrid">
     <a href="https://www.youtube.com" target="_blank" class="nav-card"><span>🎬</span><b>YouTube</b></a>
-    <a href="https://poki.com" target="_blank" class="nav-card"><span>🎮</span><b>Games</b></a>
   </div>
 
   <div class="sticky-note">
-    <strong>📌 SYSTEM NOTES</strong>
+    📌 SYSTEM NOTES
     <textarea id="noteArea" rows="3"></textarea>
   </div>
 
   <footer>
     <button class="btn back-btn" onclick="location.href='candy.html'">BACK</button>
-    <button class="btn quit-btn" onclick="logout()">LOGOUT</button>
+    <button class="btn quit-btn" onclick="localStorage.removeItem('userRole'); location.href='index.html'">LOGOUT</button>
   </footer>
 
   <script>
-    // --- 1. SEARCH & SMART REDIRECT ---
     function performSearch() {
       let q = document.getElementById('searchInput').value;
       if (!q) return;
-
-      // Smart URL check
-      if (q.includes('.') && !q.startsWith('http')) {
-        q = 'https://' + q;
-      }
-
-      if (q.startsWith('http')) {
-        window.open(q, '_blank');
-      } else {
-        window.open('https://www.google.com/search?q=' + q, '_blank');
-      }
-      document.getElementById('searchInput').value = '';
+      if (q.includes('.') && !q.startsWith('http')) q = 'https://' + q;
+      window.open(q.startsWith('http') ? q : 'https://www.google.com/search?q=' + q, '_blank');
     }
 
-    // --- 2. SOUND ENGINE ---
     function playSfx(freq) {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
@@ -121,49 +69,32 @@
       osc.start(); osc.stop(ctx.currentTime + 0.1);
     }
 
-    // --- 3. INITIALIZE ---
     document.addEventListener('DOMContentLoaded', () => {
-      // Background
       const bg = localStorage.getItem('hubWallpaper');
       if(bg) document.body.style.backgroundImage = `linear-gradient(rgba(15,18,32,0.7), rgba(15,18,32,0.7)), url('${bg}')`;
 
-      // LOAD CUSTOM LINKS (Done for both Admin and Guest)
       const links = JSON.parse(localStorage.getItem('customLinks') || '[]');
       const grid = document.getElementById('mainGrid');
       links.forEach(l => {
         const a = document.createElement('a');
-        a.href = l.url.startsWith('http') ? l.url : 'https://' + l.url;
-        a.target = "_blank";
-        a.className = "nav-card";
+        a.href = l.url.includes('http') ? l.url : 'https://' + l.url;
+        a.target = "_blank"; a.className = "nav-card";
         a.innerHTML = `<span>🌐</span><b>${l.name}</b>`;
         grid.appendChild(a);
       });
 
-      // User Logic
+      if(localStorage.getItem('userRole') === 'admin') document.getElementById('adminBtn').style.display = 'flex';
       document.getElementById('userName').textContent = localStorage.getItem('storedUsername') || 'Guest';
-      
-      // Hidden Admin Key Check
-      if(localStorage.getItem('userRole') === 'admin') {
-        document.getElementById('adminBtn').style.display = 'flex';
-      }
 
-      // Notes
-      const note = document.getElementById('noteArea');
-      note.value = localStorage.getItem('userNote') || '';
-      note.addEventListener('input', () => localStorage.setItem('userNote', note.value));
-
-      // Sounds
       document.querySelectorAll('button, .nav-card').forEach(el => {
         el.addEventListener('click', () => playSfx(400));
         el.addEventListener('mouseenter', () => playSfx(800));
       });
+      
+      const note = document.getElementById('noteArea');
+      note.value = localStorage.getItem('userNote') || '';
+      note.oninput = () => localStorage.setItem('userNote', note.value);
     });
-
-    function logout() {
-        // Clear specific role so Guest can't see Admin gear next time
-        localStorage.removeItem('userRole'); 
-        location.href='index.html';
-    }
   </script>
 </body>
 </html>
