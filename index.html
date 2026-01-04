@@ -30,14 +30,10 @@
     </div>
 
     <script>
-        // --- 1. PASTE YOUR KEYS HERE ---
         const BIN_ID = '6958d60343b1c97be91604b3';
         const MASTER_KEY = '$2a$10$fBoN5/ymnTgk71qgkEb4XOeT4Ge23eShhEZzIbEqqVsZ67KQeev8S';
-        
-        // Hash for password 'joram'
         const ADMIN_HASH = "2a42702b0ea9784979615db8283c6f128c9963f1a8f24ab174511bb0655c2e5c";
 
-        // --- 2. SECURITY FUNCTIONS ---
         async function hash(string) {
             const utf8 = new TextEncoder().encode(string);
             const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
@@ -45,23 +41,29 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // --- 3. UPDATED LOGIN LOGIC ---
+        async function logVisitor(name) {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': MASTER_KEY } });
+                const data = await res.json();
+                const record = data.record;
+                if (!record.visitors) record.visitors = [];
+                record.visitors.push({ name: name, time: new Date().toLocaleString() });
+                if (record.visitors.length > 50) record.visitors.shift(); // Keep last 50
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY },
+                    body: JSON.stringify(record)
+                });
+            } catch(e) { console.log("Logging failed"); }
+        }
+
         async function handleLogin(mode) {
             const userField = document.getElementById('user');
             const passField = document.getElementById('pass');
-            
-            // Trim removes accidental spaces
             const user = userField.value.trim();
             const pass = passField.value.trim();
 
-            // RULE 1: Username cannot be blank for anyone
-            if (user === "") {
-                alert("Please enter a Username.");
-                userField.focus();
-                return;
-            }
+            if (user === "") { alert("Please enter a Username."); userField.focus(); return; }
 
-            // SECRET TOOL: Check hash of any password
             if (user.toLowerCase() === 'gethash' && pass !== "") {
                 const newHash = await hash(pass);
                 alert("Your new hash is:\n" + newHash);
@@ -69,32 +71,25 @@
             }
 
             if (mode === 'admin') {
-                // RULE 2: Password cannot be blank for Admin
-                if (pass === "") {
-                    alert("Password field cannot be left blank.");
-                    passField.focus();
-                    return;
-                }
-
-                // RULE 3: Check Password
+                if (pass === "") { alert("Password field cannot be left blank."); passField.focus(); return; }
                 const inputHash = await hash(pass);
                 if (inputHash === ADMIN_HASH) {
+                    await logVisitor(user + " (ADMIN)");
                     localStorage.setItem('userRole', 'admin');
                     localStorage.setItem('storedUsername', user);
                     location.href = 'gemini.html';
                 } else {
-                    alert('INCORRECT PASSWORD'); // New Simple Error Message
-                    passField.value = ""; // Clear the wrong password
+                    alert('INCORRECT PASSWORD');
+                    passField.value = "";
                 }
             } else {
-                // Guest Login (Password not required)
+                await logVisitor(user);
                 localStorage.setItem('userRole', 'guest');
                 localStorage.setItem('storedUsername', user);
                 location.href = 'gemini.html';
             }
         }
 
-        // --- 4. BACKGROUND & MATRIX ---
         async function init() {
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { 'X-Master-Key': MASTER_KEY } });
@@ -127,5 +122,3 @@
     </script>
 </body>
 </html>
-
-
