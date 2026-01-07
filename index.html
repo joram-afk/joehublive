@@ -15,6 +15,14 @@
         .logo { font-size: 3rem; font-weight: 900; color: var(--primary); letter-spacing: 10px; text-shadow: 0 0 20px var(--primary); }
         .tagline { opacity: 0.6; letter-spacing: 3px; font-size: 0.9rem; margin-top: 10px; }
 
+        /* PUBLIC ARTICLE FEED (Added for AdSense) */
+        .article-feed { text-align: left; margin: 40px 0; }
+        .feed-title { font-size: 0.7rem; letter-spacing: 4px; opacity: 0.5; text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid rgba(0,255,65,0.2); padding-bottom: 10px;}
+        .article-preview { background: rgba(11, 14, 26, 0.8); padding: 25px; border-radius: 12px; border-left: 3px solid var(--primary); margin-bottom: 20px; transition: 0.3s; cursor: pointer; display: block; text-decoration: none; color: white; }
+        .article-preview:hover { background: rgba(11, 14, 26, 1); transform: translateX(5px); }
+        .article-preview h4 { margin: 0 0 10px 0; color: var(--primary); }
+        .article-preview p { font-size: 0.9rem; opacity: 0.7; margin: 0; line-height: 1.5; }
+
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 50px 0; text-align: left; }
         .info-card { background: rgba(11, 14, 26, 0.9); padding: 30px; border-radius: 15px; border: 1px solid rgba(0, 255, 65, 0.2); backdrop-filter: blur(10px); }
         .info-card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.2rem; }
@@ -67,10 +75,22 @@
             </div>
         </div>
 
+        <div class="article-feed">
+            <div class="feed-title">Latest Intelligence</div>
+            <a href="gemini.html#articles" class="article-preview">
+                <h4>The Impact of AI on Web Development in 2026</h4>
+                <p>Explore how generative models and orchestration are redefining the role of the modern developer in the current digital landscape...</p>
+            </a>
+            <a href="gemini.html#articles" class="article-preview">
+                <h4>Navigating the 2026 Digital Ecosystem</h4>
+                <p>A comprehensive guide to managing secure resource terminals and protecting cloud-based assets in an era of zero-trust security...</p>
+            </a>
+        </div>
+
         <button class="btn-main" onclick="document.getElementById('gate').style.display='flex'">LAUNCH TERMINAL</button>
 
         <footer>
-            <p>&copy; 2026 JOE HUB | <a href="about.html">About Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+            <p>&copy; 2026 JOE HUB | <a href="about.html">About Us</a> | <a href="contact.html">Contact Support</a> | <a href="privacy.html">Privacy Policy</a></p>
         </footer>
     </div>
 
