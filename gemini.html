@@ -38,13 +38,13 @@
     .card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-decoration: none; color: white; transition: 0.3s; }
     .card:hover { border-color: var(--primary); transform: translateY(-3px); background: rgba(108,156,255,0.1); }
 
-    /* BLOG SECTION (Crucial for AdSense) */
+    /* BLOG SECTION (Full Content Added) */
     .blog-section { text-align: left; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 50px; }
-    .article-card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 20px; display: flex; gap: 20px; align-items: center; border: 1px solid transparent; transition: 0.3s; cursor: pointer; }
-    .article-card:hover { border-color: var(--primary); }
-    .article-thumb { width: 80px; height: 80px; background: #252b48; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-    .article-info h3 { font-size: 1.1rem; margin-bottom: 5px; color: var(--primary); }
-    .article-info p { font-size: 0.85rem; opacity: 0.6; line-height: 1.4; }
+    .full-article { background: var(--card); border-radius: 15px; padding: 40px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.05); }
+    .full-article h3 { font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; }
+    .full-article h4 { font-size: 1.2rem; color: white; margin-top: 30px; margin-bottom: 10px; opacity: 0.9; }
+    .full-article p, .full-article li { font-size: 1rem; opacity: 0.7; line-height: 1.8; color: #eaeefc; }
+    .full-article ul { margin-left: 20px; opacity: 0.8; }
 
     /* FOOTER */
     footer { margin-top: 100px; padding: 40px; border-top: 1px solid rgba(255,255,255,0.05); opacity: 0.5; font-size: 0.8rem; }
@@ -63,9 +63,9 @@
   <nav>
     <div class="nav-logo">JOE HUB</div>
     <div class="nav-links">
-      <a href="#">Home</a>
+      <a href="index.html">Home</a>
       <a href="#articles">Articles</a>
-      <a href="#" onclick="alert('About: JOE HUB is a curated portal for elite tech tools.')">About</a>
+      <a href="about.html">About</a>
       <a href="mailto:admin@joehub.com">Contact</a>
     </div>
   </nav>
@@ -85,28 +85,37 @@
     <div class="grid" id="mainGrid"></div>
 
     <div class="blog-section" id="articles">
-      <h2 class="section-title">Latest Tech Insights</h2>
+      <h2 class="section-title">Featured Tech Insight</h2>
       
-      <div class="article-card" onclick="alert('Article coming soon!')">
-        <div class="article-thumb">🛡️</div>
-        <div class="article-info">
-          <h3>Top 5 Security Practices for 2026</h3>
-          <p>How to protect your cloud data and personal bins from unauthorized access in the modern web era.</p>
-        </div>
+      <div class="full-article">
+        <h3>Navigating the 2026 Digital Ecosystem: A Guide to Secure Resource Management</h3>
+        <p>As we move further into 2026, the way we interact with the web has fundamentally changed. No longer are we simply "browsing" the internet; we are managing complex ecosystems of cloud-based assets, AI-driven APIs, and decentralized storage. For the modern digital operator, the challenge is no longer finding information—it is organizing it securely and accessing it efficiently.</p>
+
+        <h4>The Rise of the Personal Hub</h4>
+        <p>The concept of a "Personal Hub" (like JOE HUB) has become a necessity for high-productivity workflows. In previous years, users relied on browser bookmarks that often became cluttered and unmanageable. Today, custom-coded terminals allow for:</p>
+        <ul>
+            <li><strong>Cross-Platform Consistency:</strong> Accessing the same toolset on mobile, desktop, and tablet without syncing issues.</li>
+            <li><strong>Zero-Trust Security:</strong> Keeping sensitive administrative links behind private authentication layers.</li>
+            <li><strong>API Integration:</strong> Connecting directly to database providers to update resource lists in real-time.</li>
+        </ul>
+
+        <h4>Cybersecurity in 2026: Protecting Your Terminal</h4>
+        <p>With the increase in automated bots and sophisticated phishing attempts, securing your personal directory is paramount. At JOE HUB, we emphasize three pillars of security:</p>
+        <ul>
+            <li><strong>Encrypted Hashing:</strong> Never store passwords in plain text. Utilizing SHA-256 or similar cryptographic hashes ensures that even if a database is intercepted, the keys remain unreadable.</li>
+            <li><strong>Environment Isolation:</strong> Keeping your development, administrative, and public-facing code separate prevents accidental exposure of API keys.</li>
+            <li><strong>Regular Audits:</strong> Periodically checking visitor logs and login timestamps helps identify unauthorized access attempts early.</li>
+        </ul>
+
+        <h4>Conclusion</h4>
+        <p>Building a digital home in 2026 requires a balance between accessibility and security. By utilizing modern web technologies like CSS Grid, Backdrop Filters, and Cloudflare’s global edge network, we can create environments that are not only functional but also beautiful and resilient.</p>
       </div>
 
-      <div class="article-card" onclick="alert('Article coming soon!')">
-        <div class="article-thumb">🤖</div>
-        <div class="article-info">
-          <h3>The Evolution of AI Search</h3>
-          <p>Why modern hubs are replacing traditional search engines with integrated AI terminals.</p>
-        </div>
-      </div>
     </div>
     <footer>
       <p>&copy; 2026 JOE HUB. All Rights Reserved.</p>
       <div class="footer-links">
-        <a href="#" onclick="alert('Privacy Policy: We protect your data and use encrypted sessions.')">Privacy Policy</a> | 
+        <a href="privacy.html">Privacy Policy</a> | 
         <a href="#">Terms of Service</a>
       </div>
     </footer>
