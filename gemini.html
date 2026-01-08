@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2262359390313772"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2262359390313772" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JOE HUB - Premium Tech Resources</title>
@@ -10,13 +9,11 @@
     :root { --primary: #6c9cff; --bg: #0f1220; --card: rgba(26, 31, 53, 0.9); --text: #eaeefc; }
     body { font-family: 'Segoe UI', sans-serif; background: var(--bg); background-size: cover; background-attachment: fixed; color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; }
 
-    /* NAVIGATION */
-    nav { width: 100%; background: rgba(15, 18, 32, 0.95); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(108, 156, 255, 0.2); backdrop-filter: blur(10px); }
+    nav { width: 100%; background: rgba(15, 18, 32, 0.95); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(108, 156, 255, 0.2); backdrop-filter: blur(10px); box-sizing: border-box; }
     .nav-logo { font-weight: 900; letter-spacing: 3px; color: var(--primary); font-size: 1.2rem; }
     .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.9rem; opacity: 0.8; transition: 0.3s; }
     .nav-links a:hover { opacity: 1; color: var(--primary); }
 
-    /* LOADER */
     #loader { position: fixed; top: 0; left: 0; z-index: 2000; background: var(--bg); width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.5s; }
     .orbit { width: 60px; height: 60px; position: relative; animation: spin 1s linear infinite; }
     .orbit::before, .orbit::after, .dot3 { content: ''; position: absolute; width: 12px; height: 12px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 20px var(--primary); }
@@ -25,7 +22,6 @@
     .dot3 { top: 50%; left: 0; transform: translateY(-50%); }
     @keyframes spin { 100% { transform: rotate(360deg); } }
 
-    /* LAYOUT */
     .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; text-align: center; }
     #time { font-size: 3rem; font-weight: 200; color: var(--primary); letter-spacing: 5px; }
     #date { opacity: 0.5; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 30px; }
@@ -34,13 +30,11 @@
     .search-input { flex: 1; background: transparent; border: none; color: white; padding: 10px 20px; outline: none; }
     .search-btn { background: var(--primary); border: none; padding: 10px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; color: #0b0e1a; }
 
-    /* LINKS GRID */
     h2.section-title { font-size: 0.8rem; letter-spacing: 4px; opacity: 0.4; margin-bottom: 20px; text-transform: uppercase; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 60px; }
     .card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-decoration: none; color: white; transition: 0.3s; }
     .card:hover { border-color: var(--primary); transform: translateY(-3px); background: rgba(108,156,255,0.1); }
 
-    /* BLOG ARTICLES */
     .blog-section { text-align: left; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 50px; }
     .full-article { background: var(--card); border-radius: 15px; padding: 40px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.05); }
     .full-article h3 { font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; }
@@ -49,7 +43,6 @@
     .full-article ul { margin-left: 20px; opacity: 0.8; }
     .article-meta { font-size: 0.8rem; opacity: 0.5; margin-bottom: 20px; font-style: italic; }
 
-    /* FOOTER */
     footer { margin-top: 100px; padding: 40px; border-top: 1px solid rgba(255,255,255,0.05); opacity: 0.5; font-size: 0.8rem; }
     .footer-links a { color: white; margin: 0 10px; text-decoration: none; }
 
@@ -93,28 +86,33 @@
       <div class="full-article">
         <h3>The Impact of AI on Web Development in 2026</h3>
         <div class="article-meta">Published: January 2026 | Category: Artificial Intelligence</div>
-        <p>The landscape of web development has undergone a seismic shift in the last two years. As we settle into 2026, the role of the developer has evolved from a "syntax architect" to a "logic conductor." Artificial Intelligence is no longer just a tool we use; it is the substrate upon which modern applications are built.</p>
-
-        <h4>From Coding to Orchestration</h4>
-        <p>In the early 2020s, developers spent 80% of their time writing boilerplate code. Today, AI-driven environments handle the repetitive structures, allowing engineers to focus on system architecture and user experience. The modern IDE (Integrated Development Environment) is now a predictive engine, suggesting entire functional blocks before a single character is typed.</p>
-
+        <p>The landscape of web development has undergone a seismic shift. In 2026, AI is the substrate upon which modern applications are built. The modern IDE is now a predictive engine, suggesting functional blocks before a single character is typed.</p>
         <h4>Generative UI Design</h4>
-        <p>One of the most visible changes is in User Interface (UI) design. Instead of manually tweaking CSS values, developers now describe the desired outcome to an AI agent. For example, a command like "Create a glass-morphism dashboard with neon accents" instantly generates the necessary CSS variables and HTML structure, similar to the interface you are viewing right now on JOE HUB.</p>
-
-        <h4>The Human Element Remains</h4>
-        <p>Despite these advancements, the human element remains critical. AI can write code, but it cannot understand "intent" or "empathy." The decision of <em>why</em> a feature should exist, and <em>how</em> it serves the user, is a nuance that algorithms have yet to master. This is why platforms like JOE HUB prioritize curated, human-verified resources over algorithmic noise.</p>
+        <p>Developers now describe desired outcomes to AI agents. A command like "Create a glass-morphism dashboard" instantly generates CSS variables and structure. Human intent remains the critical nuance that algorithms have yet to master.</p>
       </div>
 
       <div class="full-article">
         <h3>Navigating the Digital Ecosystem: A Guide to Security</h3>
         <div class="article-meta">Published: January 2026 | Category: Cyber Security</div>
-        <p>As we move further into 2026, the way we interact with the web has fundamentally changed. No longer are we simply "browsing" the internet; we are managing complex ecosystems of cloud-based assets, AI-driven APIs, and decentralized storage. For the modern digital operator, the challenge is no longer finding information—it is organizing it securely and accessing it efficiently.</p>
-
-        <h4>The Rise of the Personal Hub</h4>
-        <p>The concept of a "Personal Hub" (like JOE HUB) has become a necessity for high-productivity workflows. In previous years, users relied on browser bookmarks that often became cluttered and unmanageable. Today, custom-coded terminals allow for cross-platform consistency and zero-trust security measures that protect sensitive administrative links behind private authentication layers.</p>
-
+        <p>Managing complex ecosystems of cloud-based assets requires zero-trust security. Personal Hubs like JOE HUB have become necessities for high-productivity workflows, replacing cluttered browser bookmarks with secure terminals.</p>
         <h4>Cybersecurity Pillars</h4>
-        <p>With the increase in automated bots and sophisticated phishing attempts, securing your personal directory is paramount. At JOE HUB, we emphasize encrypted hashing (never storing passwords in plain text), environment isolation to separate public and private keys, and regular audits of visitor logs to identify unauthorized access attempts early.</p>
+        <p>Encryption and environment isolation are paramount. We emphasize encrypted hashing and regular audits of visitor logs to ensure unauthorized access attempts are identified immediately.</p>
+      </div>
+
+      <div class="full-article">
+        <h3>The Evolution of Cloud Infrastructure and Edge Computing</h3>
+        <div class="article-meta">Published: January 2026 | Category: Cloud Infrastructure</div>
+        <p>In 2026, the distinction between local and cloud processing has almost entirely vanished. Edge computing has decentralized the web, bringing computation closer to the user to reduce latency to sub-millisecond levels.</p>
+        <h4>Optimization Strategies</h4>
+        <p>Modern infrastructure relies on serverless architectures that scale dynamically. JOE HUB utilizes these principles to ensure that data delivery is consistent regardless of the global location of the operator. Speed is no longer a luxury; it is a fundamental requirement for digital survival.</p>
+      </div>
+
+      <div class="full-article">
+        <h3>Data Sovereignty and Ethics in the Age of Big Data</h3>
+        <div class="article-meta">Published: January 2026 | Category: Ethics & Policy</div>
+        <p>As data becomes the world's most valuable commodity, the ethical implications of its collection cannot be ignored. Users are now demanding transparency and control over their digital footprints more than ever before.</p>
+        <h4>The Role of Transparent Platforms</h4>
+        <p>Platforms must prioritize privacy-first designs. By implementing clear Privacy Policies and adhering to global standards, JOE HUB ensures that resource sharing does not come at the cost of personal security or data integrity.</p>
       </div>
 
     </div>
@@ -123,7 +121,7 @@
       <p>&copy; 2026 JOE HUB. All Rights Reserved.</p>
       <div class="footer-links">
         <a href="privacy.html">Privacy Policy</a> | 
-        <a href="#">Terms of Service</a>
+        <a href="privacy.html#terms">Terms of Service</a>
       </div>
     </footer>
   </div>
@@ -152,18 +150,23 @@
             
             const grid = document.getElementById('mainGrid');
             grid.innerHTML = ''; 
-            global.links.forEach(l => {
-                const a = document.createElement('a'); a.className = 'card'; a.target = '_blank';
-                a.href = l.url.includes('http') ? l.url : 'https://' + l.url;
-                a.innerHTML = `<b>${l.name}</b>`;
-                grid.appendChild(a);
-            });
+            if(global.links && global.links.length > 0) {
+              global.links.forEach(l => {
+                  const a = document.createElement('a'); a.className = 'card'; a.target = '_blank';
+                  a.href = l.url.includes('http') ? l.url : 'https://' + l.url;
+                  a.innerHTML = `<b>${l.name}</b>`;
+                  grid.appendChild(a);
+              });
+            }
             
-            setTimeout(() => { 
-                document.getElementById('loader').style.opacity = '0'; 
-                setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500); 
-            }, 800);
-        } catch(e) { console.error("Cloud Connection Failed"); }
+            // Speed up loader for Google Crawler
+            document.getElementById('loader').style.opacity = '0'; 
+            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500); 
+
+        } catch(e) { 
+            console.error("Cloud Connection Failed");
+            document.getElementById('loader').style.display = 'none'; 
+        }
     }
 
     function go() {
@@ -173,10 +176,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Deactivated gate check for review
       if(localStorage.getItem('userRole') === 'admin') document.getElementById('adminBtn').style.display = 'flex';
       loadHub();
     });
   </script>
 </body>
 </html>
-
