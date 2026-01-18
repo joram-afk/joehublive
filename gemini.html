@@ -21,9 +21,17 @@
     .main-interface { display: flex; gap: 20px; flex: 1; height: 100%; overflow: hidden; }
     
     /* SIDEBAR (BUTTONS) */
-    .sidebar { width: 300px; overflow-y: auto; padding-right: 10px; display: flex; flex-direction: column; gap: 15px; }
-    .sidebar::-webkit-scrollbar { width: 5px; }
-    .sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
+    .sidebar { width: 300px; padding-right: 10px; display: flex; flex-direction: column; gap: 10px; }
+    
+    /* SEARCH BAR STYLES */
+    .search-wrapper { margin-bottom: 10px; position: sticky; top: 0; background: var(--bg); z-index: 10; padding-bottom: 5px; }
+    .sidebar-search { width: 100%; background: #0f121a; border: 1px solid #333; color: var(--primary); padding: 12px; border-radius: 6px; outline: none; font-family: monospace; box-sizing: border-box; transition: 0.3s; }
+    .sidebar-search:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,255,65,0.1); }
+    .sidebar-search::placeholder { color: #444; }
+
+    .btn-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; }
+    .btn-list::-webkit-scrollbar { width: 5px; }
+    .btn-list::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
 
     /* VIEWPORT (IFRAME) */
     .viewport-container { flex: 1; background: var(--card); border: 1px solid #333; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
@@ -63,7 +71,7 @@
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .main-interface { flex-direction: column; }
-        .sidebar { width: 100%; height: 200px; }
+        .sidebar { width: 100%; height: 300px; }
     }
   </style>
 </head>
@@ -81,8 +89,13 @@
     </header>
 
     <div class="main-interface">
-      <div class="sidebar" id="sidebarList">
+      <div class="sidebar">
+        <div class="search-wrapper">
+            <input type="text" id="dashSearch" class="sidebar-search" placeholder="SEARCH MODULES..." onkeyup="filterSidebar()">
         </div>
+        <div id="sidebarList" class="btn-list">
+            </div>
+      </div>
 
       <div class="viewport-container">
         <div class="viewport-header">
@@ -107,7 +120,7 @@
 
     const fallbackLinks = [
         { name: "Google Cloud", url: "https://console.cloud.google.com" },
-        { name: "Wikipedia (Test)", url: "https://en.wikipedia.org/wiki/Main_Page" }, // Wikipedia usually works in iframes
+        { name: "Wikipedia (Test)", url: "https://en.wikipedia.org/wiki/Main_Page" }, 
         { name: "Bing Search", url: "https://www.bing.com" }
     ];
 
@@ -144,6 +157,7 @@
         links.forEach(link => {
             const div = document.createElement('div');
             div.className = 'dash-btn';
+            div.setAttribute('data-name', link.name.toLowerCase()); // For search filtering
             
             // Clean URL
             let fullUrl = link.url.includes('http') ? link.url : 'https://' + link.url;
@@ -156,6 +170,21 @@
             `;
             sidebar.appendChild(div);
         });
+    }
+
+    function filterSidebar() {
+        const input = document.getElementById('dashSearch');
+        const filter = input.value.toLowerCase();
+        const buttons = document.getElementsByClassName('dash-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            const name = buttons[i].getAttribute('data-name');
+            if (name.includes(filter)) {
+                buttons[i].style.display = "flex";
+            } else {
+                buttons[i].style.display = "none";
+            }
+        }
     }
 
     function loadUrl(url, name, btnElement) {
