@@ -4,75 +4,52 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2262359390313772" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JOE HUB - Command Dashboard</title>
+  <title>JOE HUB - Global Command Center</title>
   <style>
     :root { --primary: #00ff41; --bg: #0b0e14; --card: #151a25; --text: #e0e6ed; }
     body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; }
 
-    /* DASHBOARD LAYOUT */
-    .dashboard-container { max-width: 1400px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; height: 95vh; }
+    .dashboard-container { max-width: 1600px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; height: 98vh; }
     
-    /* HEADER */
-    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #333; margin-bottom: 20px; }
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #333; }
     .brand { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
     .status-badge { font-size: 0.7rem; background: rgba(0, 255, 65, 0.1); border: 1px solid var(--primary); padding: 5px 10px; border-radius: 4px; color: var(--primary); }
 
-    /* SPLIT VIEW LAYOUT */
-    .main-interface { display: flex; gap: 20px; flex: 1; height: 100%; overflow: hidden; }
+    .main-interface { display: flex; gap: 20px; flex: 1; height: 100%; overflow: hidden; margin-top: 20px; }
     
-    /* SIDEBAR (BUTTONS) */
-    .sidebar { width: 300px; padding-right: 10px; display: flex; flex-direction: column; gap: 10px; }
-    
-    /* SEARCH BAR STYLES */
-    .search-wrapper { margin-bottom: 10px; position: sticky; top: 0; background: var(--bg); z-index: 10; padding-bottom: 5px; }
-    .sidebar-search { width: 100%; background: #0f121a; border: 1px solid #333; color: var(--primary); padding: 12px; border-radius: 6px; outline: none; font-family: monospace; box-sizing: border-box; transition: 0.3s; }
-    .sidebar-search:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,255,65,0.1); }
-    .sidebar-search::placeholder { color: #444; }
+    /* SIDEBAR */
+    .sidebar { width: 350px; display: flex; flex-direction: column; gap: 10px; }
+    .search-wrapper { position: sticky; top: 0; background: var(--bg); z-index: 10; }
+    .sidebar-search { width: 100%; background: #0f121a; border: 1px solid #333; color: var(--primary); padding: 12px; border-radius: 6px; outline: none; font-family: monospace; box-sizing: border-box; }
 
-    .btn-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; }
-    .btn-list::-webkit-scrollbar { width: 5px; }
-    .btn-list::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
+    .btn-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
+    .btn-list::-webkit-scrollbar { width: 4px; }
+    .btn-list::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-    /* VIEWPORT (IFRAME) */
+    /* VIEWPORT */
     .viewport-container { flex: 1; background: var(--card); border: 1px solid #333; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
     .viewport-header { background: #0f121a; padding: 10px 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-    .url-display { font-family: monospace; color: var(--primary); font-size: 0.9rem; opacity: 0.8; }
-    .ext-btn { background: #222; color: white; border: 1px solid #444; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
-    .ext-btn:hover { background: var(--primary); color: black; }
+    .url-display { font-family: monospace; color: var(--primary); font-size: 0.8rem; }
+    .ext-btn { background: #222; color: white; border: 1px solid #444; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-size: 0.7rem; }
 
     iframe { width: 100%; height: 100%; border: none; background: white; }
     
-    /* BUTTON STYLES */
+    /* BUTTONS */
     .dash-btn { 
-        background: var(--card); 
-        border: 1px solid rgba(255, 255, 255, 0.05); 
-        padding: 15px; 
-        border-radius: 8px; 
-        cursor: pointer;
-        color: white; 
-        transition: all 0.2s ease; 
-        display: flex;
-        align-items: center;
-        gap: 15px;
+        background: var(--card); border: 1px solid rgba(255, 255, 255, 0.05); 
+        padding: 12px; border-radius: 6px; cursor: pointer; color: white; 
+        display: flex; align-items: center; gap: 12px; transition: 0.2s;
     }
-    .dash-btn:hover, .dash-btn.active { border-color: var(--primary); background: rgba(0, 255, 65, 0.05); transform: translateX(5px); }
-    .btn-icon { color: var(--primary); font-size: 1.2rem; }
-    .btn-name { font-weight: bold; font-size: 0.9rem; }
+    .dash-btn:hover, .dash-btn.active { border-color: var(--primary); background: rgba(0, 255, 65, 0.05); }
+    .btn-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .btn-name { font-size: 0.85rem; font-weight: 600; }
+    .btn-cat { font-size: 0.6rem; color: #555; margin-left: auto; text-transform: uppercase; }
 
-    /* PLACEHOLDER STATE */
-    .empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #444; }
-    .empty-icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+    .empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; opacity: 0.3; }
 
-    /* LOADER */
-    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s; }
-    .spinner { width: 40px; height: 40px; border: 3px solid rgba(0,255,65,0.3); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite linear; }
+    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(0,255,65,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite linear; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-        .main-interface { flex-direction: column; }
-        .sidebar { width: 100%; height: 300px; }
-    }
   </style>
 </head>
 <body>
@@ -81,129 +58,112 @@
 
   <div class="dashboard-container">
     <header>
-      <div class="brand">
-        <span>JOE HUB</span>
-        <span class="status-badge">COMMAND CENTER</span>
-      </div>
-      <div id="clock" style="font-family: monospace; opacity: 0.7;">00:00:00</div>
+      <div class="brand">JOE HUB <span class="status-badge">GLOBAL TERMINAL</span></div>
+      <div id="clock" style="font-family: monospace; opacity: 0.5;">00:00:00</div>
     </header>
 
     <div class="main-interface">
       <div class="sidebar">
         <div class="search-wrapper">
-            <input type="text" id="dashSearch" class="sidebar-search" placeholder="SEARCH MODULES..." onkeyup="filterSidebar()">
+            <input type="text" id="dashSearch" class="sidebar-search" placeholder="FILTER 50+ MODULES..." onkeyup="filterSidebar()">
         </div>
-        <div id="sidebarList" class="btn-list">
-            </div>
+        <div id="sidebarList" class="btn-list"></div>
       </div>
 
       <div class="viewport-container">
         <div class="viewport-header">
-          <span class="url-display" id="currentUrl">READY TO EXECUTE</span>
-          <a href="#" target="_blank" id="extLink" class="ext-btn">OPEN IN NEW TAB ↗</a>
+          <span class="url-display" id="currentUrl">SYSTEM IDLE - SELECT MODULE</span>
+          <a href="#" target="_blank" id="extLink" class="ext-btn">EXTERNAL LINK ↗</a>
         </div>
-        
         <iframe id="mainFrame" name="viewer"></iframe>
-        
         <div class="empty-state" id="emptyState">
-          <div class="empty-icon">⚡</div>
-          <h3>SELECT A MODULE</h3>
-          <p>Choose a resource from the sidebar to load it here.</p>
+          <h2>DATABASE LOADED</h2>
+          <p>Global Resources Ready for Execution</p>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const BIN_ID = '6958d60343b1c97be91604b3';
-    const MASTER_KEY = '$2a$10$fBoN5/ymnTgk71qgkEb4XOeT4Ge23eShhEZzIbEqqVsZ67KQeev8S';
-
-    const fallbackLinks = [
-        { name: "Google Cloud", url: "https://console.cloud.google.com" },
-        { name: "Wikipedia (Test)", url: "https://en.wikipedia.org/wiki/Main_Page" }, 
-        { name: "Bing Search", url: "https://www.bing.com" }
+    const registry = [
+        // CLOUD & INFRA
+        { name: "AWS Console", url: "console.aws.amazon.com", cat: "cloud", ico: "☁️" },
+        { name: "Azure Portal", url: "portal.azure.com", cat: "cloud", ico: "🔷" },
+        { name: "Google Cloud", url: "console.cloud.google.com", cat: "cloud", ico: "🌐" },
+        { name: "DigitalOcean", url: "cloud.digitalocean.com", cat: "cloud", ico: "🌊" },
+        { name: "Linode", url: "login.linode.com", cat: "cloud", ico: "💾" },
+        // AI & DATA
+        { name: "ChatGPT", url: "chat.openai.com", cat: "ai", ico: "🤖" },
+        { name: "Claude AI", url: "claude.ai", cat: "ai", ico: "🧠" },
+        { name: "Gemini", url: "gemini.google.com", cat: "ai", ico: "✨" },
+        { name: "HuggingFace", url: "huggingface.co", cat: "ai", ico: "🤗" },
+        { name: "Midjourney", url: "midjourney.com", cat: "ai", ico: "🎨" },
+        // SECURITY
+        { name: "VirusTotal", url: "virustotal.com", cat: "sec", ico: "🛡️" },
+        { name: "Shodan", url: "shodan.io", cat: "sec", ico: "🔍" },
+        { name: "HaveIBeenPwned", url: "haveibeenpwned.com", cat: "sec", ico: "🔐" },
+        { name: "HackTheBox", url: "hackthebox.com", cat: "sec", ico: "💀" },
+        { name: "Cisco Meraki", url: "meraki.cisco.com", cat: "sec", ico: "📡" },
+        // DEV TOOLS
+        { name: "GitHub", url: "github.com", cat: "dev", ico: "🐙" },
+        { name: "GitLab", url: "gitlab.com", cat: "dev", ico: "🦊" },
+        { name: "Stack Overflow", url: "stackoverflow.com", cat: "dev", ico: "📚" },
+        { name: "CodePen", url: "codepen.io", cat: "dev", ico: "✒️" },
+        { name: "Vercel", url: "vercel.com", cat: "dev", ico: "▲" },
+        { name: "Firebase", url: "firebase.google.com", cat: "dev", ico: "🔥" },
+        // FINANCE & CRYPTO
+        { name: "Binance", url: "binance.com", cat: "fin", ico: "💰" },
+        { name: "CoinMarketCap", url: "coinmarketcap.com", cat: "fin", ico: "📈" },
+        { name: "TradingView", url: "tradingview.com", cat: "fin", ico: "📉" },
+        { name: "PayPal", url: "paypal.com", cat: "fin", ico: "💳" },
+        { name: "Stripe", url: "stripe.com", cat: "fin", ico: "🏁" },
+        // ENTERPRISE
+        { name: "Slack", url: "slack.com", cat: "ent", ico: "💬" },
+        { name: "Trello", url: "trello.com", cat: "ent", ico: "📋" },
+        { name: "Notion", url: "notion.so", cat: "ent", ico: "📝" },
+        { name: "Jira", url: "atlassian.com/software/jira", cat: "ent", ico: "🏗️" },
+        { name: "Zoom", url: "zoom.us", cat: "ent", ico: "📹" },
+        // SOCIAL & MEDIA
+        { name: "LinkedIn", url: "linkedin.com", cat: "med", ico: "💼" },
+        { name: "Twitter / X", url: "x.com", cat: "med", ico: "🐦" },
+        { name: "YouTube", url: "youtube.com", cat: "med", ico: "▶️" },
+        { name: "Medium", url: "medium.com", cat: "med", ico: "📖" },
+        { name: "Reddit", url: "reddit.com", cat: "med", ico: "👾" }
     ];
 
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').textContent = now.toLocaleTimeString();
-    }
-    setInterval(updateClock, 1000);
-
-    async function loadDashboard() {
-        try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { 
-                headers: { 'X-Master-Key': MASTER_KEY } 
-            });
-            if (!res.ok) throw new Error("Database fetch failed");
-            const data = await res.json();
-            const links = data.record.links || fallbackLinks;
-            renderSidebar(links);
-        } catch(e) { 
-            console.log("Loading fallback mode...");
-            renderSidebar(fallbackLinks); 
-        }
-
-        setTimeout(() => {
-            document.getElementById('loader').style.opacity = '0';
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
-        }, 800);
+    async function init() {
+        renderSidebar(registry);
+        setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }, 1000);
+        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 800);
     }
 
-    function renderSidebar(links) {
-        const sidebar = document.getElementById('sidebarList');
-        sidebar.innerHTML = '';
-        
-        links.forEach(link => {
+    function renderSidebar(items) {
+        const list = document.getElementById('sidebarList');
+        list.innerHTML = '';
+        items.forEach(item => {
             const div = document.createElement('div');
             div.className = 'dash-btn';
-            div.setAttribute('data-name', link.name.toLowerCase()); // For search filtering
-            
-            // Clean URL
-            let fullUrl = link.url.includes('http') ? link.url : 'https://' + link.url;
-            
-            div.onclick = () => loadUrl(fullUrl, link.name, div);
-            
-            div.innerHTML = `
-                <div class="btn-icon">➜</div>
-                <div class="btn-name">${link.name}</div>
-            `;
-            sidebar.appendChild(div);
+            div.onclick = () => {
+                const url = item.url.includes('http') ? item.url : 'https://' + item.url;
+                document.getElementById('mainFrame').src = url;
+                document.getElementById('currentUrl').textContent = `RUNNING: ${item.name}`;
+                document.getElementById('extLink').href = url;
+                document.getElementById('emptyState').style.display = 'none';
+                document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
+                div.classList.add('active');
+            };
+            div.innerHTML = `<span class="btn-icon">${item.ico}</span><span class="btn-name">${item.name}</span><span class="btn-cat">${item.cat}</span>`;
+            list.appendChild(div);
         });
     }
 
     function filterSidebar() {
-        const input = document.getElementById('dashSearch');
-        const filter = input.value.toLowerCase();
-        const buttons = document.getElementsByClassName('dash-btn');
-
-        for (let i = 0; i < buttons.length; i++) {
-            const name = buttons[i].getAttribute('data-name');
-            if (name.includes(filter)) {
-                buttons[i].style.display = "flex";
-            } else {
-                buttons[i].style.display = "none";
-            }
-        }
+        const query = document.getElementById('dashSearch').value.toLowerCase();
+        const filtered = registry.filter(i => i.name.toLowerCase().includes(query) || i.cat.toLowerCase().includes(query));
+        renderSidebar(filtered);
     }
 
-    function loadUrl(url, name, btnElement) {
-        // Highlight active button
-        document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
-
-        // Hide empty state
-        document.getElementById('emptyState').style.display = 'none';
-        
-        // Update Iframe
-        document.getElementById('mainFrame').src = url;
-        
-        // Update Header Info
-        document.getElementById('currentUrl').textContent = `RUNNING: ${name.toUpperCase()}`;
-        document.getElementById('extLink').href = url;
-    }
-
-    window.onload = loadDashboard;
+    window.onload = init;
   </script>
 </body>
 </html>
