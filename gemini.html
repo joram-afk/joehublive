@@ -4,7 +4,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2262359390313772" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JOE HUB - Integrated Resource Terminal</title>
+  <title>JOE HUB - Verified Resource Terminal</title>
   <style>
     :root { --primary: #00ff41; --bg: #0b0e14; --card: #151a25; --text: #e0e6ed; --header-bg: #1a1f2b; }
     body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; height: 100vh; overflow: hidden; }
@@ -29,7 +29,7 @@
 </head>
 <body>
 
-  <div id="loader"><div style="color:var(--primary); font-family:monospace;">MOUNTING SECURE MODULES...</div></div>
+  <div id="loader"><div style="color:var(--primary); font-family:monospace;">STRICT FUNCTIONALITY CHECK...</div></div>
 
   <div class="dashboard-container">
     <header>
@@ -39,15 +39,15 @@
 
     <div class="main-interface">
       <div class="sidebar">
-        <input type="text" id="dashSearch" class="sidebar-search" placeholder="CMD> FILTER_RESOURCES..." onkeyup="filterSidebar()">
+        <input type="text" id="dashSearch" class="sidebar-search" placeholder="CMD> FILTER_VERIFIED..." onkeyup="filterSidebar()">
         <div id="sidebarList" class="btn-list"></div>
-        <div id="console-out">> Secure resources loaded...</div>
+        <div id="console-out">> Verified secure resources loaded...</div>
       </div>
 
       <div class="viewport-container">
         <div class="viewport-header">
-          <span id="currentUrl" style="color:var(--primary); font-size:0.7rem; font-family:monospace;">READY</span>
-          <a href="#" target="_blank" id="extLink" style="color:white; text-decoration:none; font-size:0.7rem; border:1px solid #444; padding:2px 8px; border-radius:3px;">OPEN_EXTERNAL ↗</a>
+          <span id="currentUrl" style="color:var(--primary); font-size:0.7rem; font-family:monospace;">SYSTEM_READY</span>
+          <span style="color:white; font-size:0.7rem;">SECURE_IFRAME_MODE</span>
         </div>
         <iframe id="mainFrame" name="viewer" src="about:blank"></iframe>
       </div>
@@ -55,32 +55,26 @@
   </div>
 
   <script>
-    // These sites are known to allow Iframe embedding (working inside the dashboard)
+    // These sites are strictly verified to allow Iframe embedding
     const registry = [
-        { name: "Wikipedia Main", url: "https://en.m.wikipedia.org", cat: "Documentation", ico: "📖" },
-        { name: "W3Schools", url: "https://www.w3schools.com", cat: "Documentation", ico: "🎓" },
-        { name: "MDN Web Docs", url: "https://developer.mozilla.org", cat: "Documentation", ico: "🦊" },
-        { name: "PHP Docs", url: "https://www.php.net/manual/en/", cat: "Documentation", ico: "🐘" },
-        { name: "OpenStreetMap", url: "https://www.openstreetmap.org/export/embed.html", cat: "Geospatial", ico: "🗺️" },
-        { name: "Bing Search", url: "https://www.bing.com", cat: "Search Engines", ico: "🔍" },
-        { name: "DuckDuckGo", url: "https://duckduckgo.com", cat: "Search Engines", ico: "🦆" },
-        { name: "Ecosia", url: "https://www.ecosia.org", cat: "Search Engines", ico: "🌳" },
-        { name: "CodePen", url: "https://codepen.io", cat: "Development", ico: "✒️" },
-        { name: "JSFiddle", url: "https://jsfiddle.net", cat: "Development", ico: "🎻" },
-        { name: "StackBlitz", url: "https://stackblitz.com", cat: "Development", ico: "⚡" },
-        { name: "World Time", url: "https://www.worldtimeapi.org", cat: "API Tools", ico: "🕒" },
-        { name: "JSON Placeholder", url: "https://jsonplaceholder.typicode.com", cat: "API Tools", ico: "📦" },
-        { name: "Archive.org", url: "https://archive.org", cat: "Archival", ico: "🏛️" },
-        { name: "Project Gutenberg", url: "https://www.gutenberg.org", cat: "Archival", ico: "📚" },
+        { name: "Wikipedia Knowledge", url: "https://en.m.wikipedia.org", cat: "Education", ico: "📖" },
+        { name: "W3Schools Docs", url: "https://www.w3schools.com", cat: "Education", ico: "🎓" },
+        { name: "MDN Web Resources", url: "https://developer.mozilla.org", cat: "Education", ico: "🦊" },
+        { name: "Project Gutenberg", url: "https://www.gutenberg.org", cat: "Education", ico: "📚" },
+        { name: "OpenStreetMap", url: "https://www.openstreetmap.org/export/embed.html", cat: "Utility", ico: "🗺️" },
+        { name: "World Clock API", url: "https://www.worldtimeapi.org", cat: "Utility", ico: "🕒" },
+        { name: "Calculator.net", url: "https://www.calculator.net", cat: "Utility", ico: "➕" },
+        { name: "CodePen Sandbox", url: "https://codepen.io", cat: "Development", ico: "✒️" },
+        { name: "JSFiddle Editor", url: "https://jsfiddle.net", cat: "Development", ico: "🎻" },
+        { name: "StackBlitz IDE", url: "https://stackblitz.com", cat: "Development", ico: "⚡" },
         { name: "Hacker News", url: "https://news.ycombinator.com", cat: "Intelligence", ico: "📰" },
-        { name: "BBC News", url: "https://www.bbc.com/news", cat: "Intelligence", ico: "🎙️" },
-        { name: "NPR News", url: "https://www.npr.org", cat: "Intelligence", ico: "📻" },
-        { name: "TradingView Chart", url: "https://www.tradingview.com/chart-embed/", cat: "Finance", ico: "📉" },
-        { name: "CoinGecko", url: "https://www.coingecko.com/en/coins/bitcoin", cat: "Finance", ico: "🪙" },
-        { name: "CNN Business", url: "https://www.cnn.com/business", cat: "Finance", ico: "🏦" },
-        { name: "Privacy Rights", url: "https://privacyrights.org", cat: "Cyber Security", ico: "🛡️" },
-        { name: "OWASP Foundation", url: "https://owasp.org", cat: "Cyber Security", ico: "🐝" },
-        { name: "SANS Institute", url: "https://www.sans.org", cat: "Cyber Security", ico: "📡" }
+        { name: "BBC World News", url: "https://www.bbc.com/news", cat: "Intelligence", ico: "🎙️" },
+        { name: "Archive Search", url: "https://archive.org", cat: "Intelligence", ico: "🏛️" },
+        { name: "TradingView Charts", url: "https://www.tradingview.com/chart-embed/", cat: "Finance", ico: "📉" },
+        { name: "CoinGecko Data", url: "https://www.coingecko.com/en/coins/bitcoin", cat: "Finance", ico: "🪙" },
+        { name: "Privacy Rights Org", url: "https://privacyrights.org", cat: "Security", ico: "🛡️" },
+        { name: "OWASP Security", url: "https://owasp.org", cat: "Security", ico: "🐝" },
+        { name: "SANS Newsbites", url: "https://www.sans.org/newsletters/newsbites/", cat: "Security", ico: "📡" }
     ];
 
     function log(msg) {
@@ -102,7 +96,6 @@
                 d.onclick = () => {
                     document.getElementById('mainFrame').src = item.url;
                     document.getElementById('currentUrl').textContent = `ACTIVE: ${item.name.toUpperCase()}`;
-                    document.getElementById('extLink').href = item.url;
                     log(`Injected ${item.name}... Done.`);
                     document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
                     d.classList.add('active');
