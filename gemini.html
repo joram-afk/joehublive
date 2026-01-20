@@ -4,130 +4,117 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2262359390313772" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>📟</text></svg>">
-  
-  <title>JOE HUB | Verified Resource Terminal</title>
-  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>🇰🇪</text></svg>">
+  <title>JOE HUB | Kenya Digital Utility & Data Saver</title>
   <style>
-    :root { --primary: #00ff41; --bg: #0b0e14; --card: #151a25; --text: #e0e6ed; --header-bg: #1a1f2b; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; height: 100vh; overflow: hidden; }
+    :root { --primary: #00ff41; --bg: #0b0e14; --card: #151a25; --text: #e0e6ed; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
     
-    /* Loading Screen */
-    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; font-family: monospace; }
+    .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
     
-    .dashboard-container { display: flex; flex-direction: column; height: 100vh; padding: 15px; box-sizing: border-box; }
+    .card { background: var(--card); border: 1px solid #333; padding: 20px; border-radius: 12px; }
+    .card h2 { color: var(--primary); margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
     
-    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #333; }
-    .brand { font-size: 1.3rem; font-weight: 900; color: var(--primary); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
-    
-    /* Live Pulse Status */
-    .pulse { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); animation: blink 1.5s infinite; }
-    @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+    /* TOOL: DATA CALCULATOR */
+    .calc-row { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
+    input { background: #000; border: 1px solid var(--primary); color: var(--primary); padding: 8px; width: 80px; border-radius: 4px; }
+    .result-box { background: rgba(0, 255, 65, 0.1); padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 1.2rem; border: 1px dashed var(--primary); }
 
-    .main-interface { display: flex; gap: 15px; flex: 1; overflow: hidden; margin-top: 15px; }
-    
-    /* Sidebar */
-    .sidebar { width: 300px; display: flex; flex-direction: column; border-right: 1px solid #222; }
-    .sidebar-search { width: 100%; background: #0f121a; border: 1px solid #333; color: var(--primary); padding: 10px; border-radius: 4px; outline: none; font-family: monospace; box-sizing: border-box; }
-    .btn-list { overflow-y: auto; flex: 1; padding-right: 8px; margin-top: 10px; }
-    .btn-list::-webkit-scrollbar { width: 3px; }
-    .btn-list::-webkit-scrollbar-thumb { background: var(--primary); }
-    
-    .cat-header { background: var(--header-bg); color: var(--primary); padding: 6px 10px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin: 15px 0 5px 0; border-radius: 2px; position: sticky; top: 0; }
-    .dash-btn { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; cursor: pointer; color: #ccc; display: flex; align-items: center; gap: 10px; transition: 0.2s; margin-bottom: 4px; font-size: 0.85rem; }
-    .dash-btn:hover, .dash-btn.active { border-color: var(--primary); color: white; background: rgba(0, 255, 65, 0.05); }
-    
-    #console-out { height: 60px; background: #000; border: 1px solid #222; margin-top: 10px; padding: 10px; font-family: monospace; font-size: 0.7rem; color: #008800; overflow-y: auto; }
-    
-    /* Viewport */
-    .viewport-container { flex: 1; background: var(--card); border: 1px solid #333; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
-    .viewport-header { background: #0f121a; padding: 8px 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-    iframe { width: 100%; height: 100%; border: none; background: white; }
+    /* TOOL: USSD CODES TABLE */
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #222; }
+    th { color: var(--primary); }
+
+    /* DASHBOARD MINI */
+    .mini-dash { display: flex; flex-direction: column; gap: 10px; }
+    .dash-link { background: #1e2533; padding: 12px; border-radius: 6px; text-decoration: none; color: white; display: flex; justify-content: space-between; transition: 0.3s; }
+    .dash-link:hover { background: var(--primary); color: black; }
+
+    @media (max-width: 768px) { .grid-container { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <div id="loader"><div>[ SYSTEM BOOTING... ]</div></div>
+  <header style="text-align: center; margin-bottom: 30px;">
+    <h1 style="color: var(--primary); letter-spacing: 3px;">JOE HUB KENYA</h1>
+    <p>Smart Tools for the Kenyan Digital Consumer</p>
+  </header>
 
-  <div class="dashboard-container">
-    <header>
-      <div class="brand"><div class="pulse"></div> JOE HUB // TERMINAL</div>
-      <div id="clock" style="font-family: monospace; opacity: 0.5;">00:00:00</div>
-    </header>
-
-    <div class="main-interface">
-      <div class="sidebar">
-        <input type="text" id="dashSearch" class="sidebar-search" placeholder="CMD> FILTER_VERIFIED..." onkeyup="filterSidebar()">
-        <div id="sidebarList" class="btn-list"></div>
-        <div id="console-out">> Verified modules online...</div>
+  <div class="grid-container">
+    
+    <div class="card">
+      <h2>Data Usage Estimator</h2>
+      <p style="font-size: 0.8rem; opacity: 0.7;">Plan your bundles before you buy. Enter hours per day:</p>
+      
+      <div class="calc-row">
+        <span>TikTok / Instagram (Video)</span>
+        <input type="number" id="social" value="1" oninput="calcData()">
       </div>
+      <div class="calc-row">
+        <span>YouTube (High Quality)</span>
+        <input type="number" id="yt" value="0" oninput="calcData()">
+      </div>
+      <div class="calc-row">
+        <span>Web Browsing / WhatsApp</span>
+        <input type="number" id="web" value="2" oninput="calcData()">
+      </div>
+      
+      <div class="result-box" id="dataResult">
+        Daily Estimate: 650 MB
+      </div>
+      <p style="font-size: 0.7rem; margin-top: 10px; text-align: center; color: #888;">*Estimates based on average 2026 Kenyan network speeds.</p>
+    </div>
 
-      <div class="viewport-container">
-        <div class="viewport-header">
-          <span id="currentUrl" style="color:var(--primary); font-size:0.7rem; font-family:monospace;">READY_STATE</span>
-          <span style="color:rgba(255,255,255,0.3); font-size:0.6rem;">SECURE_X_FRAME_BYPASS</span>
-        </div>
-        <iframe id="mainFrame" name="viewer" src="about:blank"></iframe>
+    <div class="card">
+      <h2>Essential USSD Codes</h2>
+      <table>
+        <tr><th>Service</th><th>Code</th></tr>
+        <tr><td>Stop All Subscriptions</td><td>*456*9*5#</td></tr>
+        <tr><td>Check Data Balance</td><td>*544#</td></tr>
+        <tr><td>Airtel Data Manager</td><td>*100#</td></tr>
+        <tr><td>MPESA Reversal</td><td>Text to 456</td></tr>
+        <tr><td>CRB Status Check</td><td>*433#</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Lite Resources (Save Data)</h2>
+      <div class="mini-dash">
+        <a href="https://en.m.wikipedia.org" target="v" class="dash-link"><span>Wikipedia Lite</span> <span>➜</span></a>
+        <a href="https://m.facebook.com" target="v" class="dash-link"><span>Facebook Lite</span> <span>➜</span></a>
+        <a href="https://m.ebc.com" target="v" class="dash-link"><span>News Lite</span> <span>➜</span></a>
+        <a href="https://lite.cnn.com" target="v" class="dash-link"><span>CNN Text-Only</span> <span>➜</span></a>
       </div>
     </div>
+
+    <div class="card">
+      <h2>Digital Skills Section</h2>
+      <p>Learn how to reduce data consumption on your smartphone:</p>
+      <ul style="font-size: 0.85rem; color: #b0b8c1;">
+        <li>Disable Auto-update in Play Store</li>
+        <li>Set YouTube to 360p for mobile viewing</li>
+        <li>Use "Data Saver" mode in Chrome Settings</li>
+        <li>Turn off WhatsApp Auto-Download for media</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div style="max-width: 1200px; margin: 20px auto; height: 400px; background: #000; border-radius: 12px; overflow: hidden;">
+    <iframe name="v" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
   </div>
 
   <script>
-    const registry = [
-        { name: "Wikipedia Knowledge", url: "https://en.m.wikipedia.org", cat: "Education", ico: "📖" },
-        { name: "W3Schools Docs", url: "https://www.w3schools.com", cat: "Education", ico: "🎓" },
-        { name: "MDN Web Resources", url: "https://developer.mozilla.org", cat: "Education", ico: "🦊" },
-        { name: "OpenStreetMap", url: "https://www.openstreetmap.org/export/embed.html", cat: "Utility", ico: "🗺️" },
-        { name: "Calculator Tool", url: "https://www.calculator.net", cat: "Utility", ico: "➕" },
-        { name: "CodePen Sandbox", url: "https://codepen.io", cat: "Development", ico: "✒️" },
-        { name: "JSFiddle Editor", url: "https://jsfiddle.net", cat: "Development", ico: "🎻" },
-        { name: "StackBlitz IDE", url: "https://stackblitz.com", cat: "Development", ico: "⚡" },
-        { name: "Hacker News", url: "https://news.ycombinator.com", cat: "Intelligence", ico: "📰" },
-        { name: "BBC World News", url: "https://www.bbc.com/news", cat: "Intelligence", ico: "🎙️" },
-        { name: "CoinGecko Data", url: "https://www.coingecko.com/en/coins/bitcoin", cat: "Finance", ico: "🪙" },
-        { name: "OWASP Security", url: "https://owasp.org", cat: "Security", ico: "🐝" }
-    ];
-
-    function log(msg) {
-        const con = document.getElementById('console-out');
-        con.innerHTML += `<br>> ${msg}`;
-        con.scrollTop = con.scrollHeight;
+    function calcData() {
+        const social = document.getElementById('social').value * 500; // 500MB per hour
+        const yt = document.getElementById('yt').value * 700;     // 700MB per hour
+        const web = document.getElementById('web').value * 50;      // 50MB per hour
+        
+        const total = social + yt + web;
+        const display = total >= 1000 ? (total/1000).toFixed(2) + " GB" : total + " MB";
+        
+        document.getElementById('dataResult').textContent = "Daily Estimate: " + display;
     }
-
-    function renderSidebar(items) {
-        const list = document.getElementById('sidebarList');
-        list.innerHTML = '';
-        const grouped = items.reduce((acc, i) => { (acc[i.cat] = acc[i.cat] || []).push(i); return acc; }, {});
-
-        for (const cat in grouped) {
-            const h = document.createElement('div'); h.className = 'cat-header'; h.textContent = cat;
-            list.appendChild(h);
-            grouped[cat].forEach(item => {
-                const d = document.createElement('div'); d.className = 'dash-btn';
-                d.onclick = () => {
-                    document.getElementById('mainFrame').src = item.url;
-                    document.getElementById('currentUrl').textContent = `INJECTED: ${item.name.toUpperCase()}`;
-                    log(`Success: Resource ${item.name} mounted.`);
-                    document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
-                    d.classList.add('active');
-                };
-                d.innerHTML = `<span>${item.ico}</span><span>${item.name}</span>`;
-                list.appendChild(d);
-            });
-        }
-    }
-
-    function filterSidebar() {
-        const q = document.getElementById('dashSearch').value.toLowerCase();
-        renderSidebar(registry.filter(i => i.name.toLowerCase().includes(q) || i.cat.toLowerCase().includes(q)));
-    }
-
-    window.onload = () => {
-        renderSidebar(registry);
-        setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }, 1000);
-        setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
-    };
   </script>
 </body>
 </html>
