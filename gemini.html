@@ -7,136 +7,198 @@
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>💸</text></svg>">
-  <title>JOE HUB | Business Toolkit</title>
+  <title>JOE HUB | Mobile App</title>
   <style>
     :root { --primary: #00D366; --secondary: #FFD700; --bg: #090c10; --card: #161b22; --text: #f0f6fc; --danger: #ff4444; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
 
-    header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    /* --- HEADER & MENU --- */
+    header { background: var(--card); padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+    .menu-btn { font-size: 1.8rem; cursor: pointer; color: var(--primary); margin-right: 20px; background: none; border: none; }
+    h1 { margin: 0; font-size: 1.2rem; font-weight: 700; }
     h1 span { color: var(--primary); }
 
-    /* ACTION BAR */
-    .action-bar { max-width: 1400px; margin: 0 auto 20px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
-    button { cursor: pointer; border: none; border-radius: 6px; padding: 10px 15px; font-weight: bold; transition: 0.3s; }
-    .btn-pdf { background: var(--secondary); color: black; }
-    .btn-view { background: #5865f2; color: white; } /* Blue for View */
-    .btn-refresh { background: #30363d; color: white; }
-    .btn-add { background: var(--primary); color: white; margin-top: 10px; width: 100%; }
+    /* SIDE MENU DRAWER */
+    .side-menu { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; left: 0; background-color: #0d1117; overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.5); padding-top: 60px; }
+    .side-menu a { padding: 15px 30px; text-decoration: none; font-size: 1.1rem; color: #8b949e; display: block; transition: 0.2s; border-bottom: 1px solid #21262d; }
+    .side-menu a:hover, .side-menu a.active { color: var(--text); background: rgba(0, 211, 102, 0.1); border-left: 4px solid var(--primary); }
+    .close-btn { position: absolute; top: 10px; right: 20px; font-size: 2rem; color: #8b949e; background: none; border: none; cursor: pointer; }
 
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
-    .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
+    /* --- SCREENS --- */
+    .app-screen { padding: 20px; display: none; animation: fadeIn 0.4s; max-width: 800px; margin: 0 auto; }
+    .active-screen { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- CARDS & UI --- */
+    .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    input, select { background: #0d1117; border: 1px solid #30363d; color: white; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
-    th { text-align: left; color: #8b949e; padding-bottom: 10px; border-bottom: 1px solid #333; }
-    td { padding: 10px 0; border-bottom: 1px solid #21262d; }
-    .delete-btn { color: var(--danger); background: none; padding: 0; font-size: 1.1rem; }
+    /* BUTTONS */
+    .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1rem; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--secondary); color: black; }
+    .btn-danger { background: #30363d; color: #ff6666; }
 
-    .result-display { background: rgba(0, 211, 102, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; text-align: center; font-size: 1.3rem; font-weight: bold; color: var(--primary); margin: 15px 0; }
-    input { background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; }
-
-    /* MODAL STYLING */
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
-    .modal-content { background: var(--card); margin: 10% auto; padding: 30px; border: 1px solid var(--primary); border-radius: 15px; width: 90%; max-width: 500px; position: relative; }
-    .close-modal { position: absolute; right: 20px; top: 15px; font-size: 1.5rem; cursor: pointer; color: #8b949e; }
-    .summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #30363d; }
-    .summary-row span { color: #8b949e; }
-    .summary-row strong { color: var(--text); }
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+    th { text-align: left; color: #8b949e; border-bottom: 1px solid #333; padding: 5px; }
+    td { padding: 10px 5px; border-bottom: 1px solid #21262d; }
+    
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+    .stat-box { background: #0d1117; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #30363d; }
+    .stat-val { display: block; font-size: 1.2rem; font-weight: bold; color: var(--text); margin-top: 5px; }
+    .stat-label { font-size: 0.8rem; color: #8b949e; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>JOE HUB <span>BIASHARA</span></h1>
-    <div style="color: #8b949e;">Itemized Profit Manager & Tax Calculator</div>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <h1>JOE HUB <span>APP</span></h1>
   </header>
 
-  <div class="action-bar">
-    <button class="btn-refresh" onclick="refreshPage()">🔄 Reset All</button>
-    <button class="btn-view" onclick="openModal()">👁️ View Summary</button>
-    <button class="btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
-  </div>
-
-  <div id="summaryModal" class="modal">
-    <div class="modal-content">
-      <span class="close-modal" onclick="closeModal()">&times;</span>
-      <h2 style="color: var(--primary); margin-top: 0;">Business Report</h2>
-      <div id="modalStats">
-        </div>
-      <button class="btn-add" style="background: #30363d;" onclick="closeModal()">Close View</button>
+  <div id="sideMenu" class="side-menu">
+    <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    <a href="#" onclick="showScreen('inventory', this)" class="active">📦 Inventory Manager</a>
+    <a href="#" onclick="showScreen('analytics', this)">📊 Business Analytics</a>
+    <a href="#" onclick="showScreen('tax', this)">💸 Tax Calculator</a>
+    <div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">
+      <button class="btn-danger" style="width: 80%;" onclick="refreshPage()">🔄 Reset App</button>
     </div>
   </div>
 
-  <div class="dashboard-grid">
+  <div id="inventory" class="app-screen active-screen">
     <div class="card">
-      <h3>📦 Add Item</h3>
-      <input type="text" id="itemName" placeholder="Item Name (e.g. Shoes)">
-      <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <h3>Add New Item</h3>
+      <input type="text" id="itemName" placeholder="Item Name (e.g. Unga Bale)">
+      <div style="display: flex; gap: 10px;">
         <input type="number" id="itemQty" placeholder="Qty" value="1">
         <input type="number" id="itemCost" placeholder="Buy Price">
-        <input type="number" id="itemSell" placeholder="Sell Price">
       </div>
-      <button class="btn-add" onclick="addItem()">+ Add to List</button>
-      
+      <input type="number" id="itemSell" placeholder="Selling Price">
+      <button class="btn btn-primary" onclick="addItem()">+ Add Item</button>
+    </div>
+
+    <div class="card" style="padding: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="margin:0;">Stock List</h3>
+        <button onclick="downloadPDF()" style="background:none; border:none; color:var(--secondary); cursor:pointer;">📄 PDF</button>
+      </div>
       <table>
-        <thead>
-          <tr><th>Item</th><th>Qty</th><th>Profit</th><th></th></tr>
-        </thead>
+        <thead><tr><th>Item</th><th>Qty</th><th>Profit</th><th></th></tr></thead>
         <tbody id="inventoryBody"></tbody>
       </table>
     </div>
+  </div>
 
+  <div id="analytics" class="app-screen">
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-label">Total Revenue</span>
+        <span class="stat-val" id="statRevenue">KES 0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Net Profit</span>
+        <span class="stat-val" style="color: var(--primary);" id="statProfit">KES 0</span>
+      </div>
+    </div>
+    
     <div class="card">
-      <h3>📊 Profit Breakdown</h3>
-      <div class="result-display" id="totalProfit">Total Profit: KES 0</div>
+      <h3>Profit Margin</h3>
       <div style="height: 250px;"><canvas id="profitChart"></canvas></div>
+      <p style="text-align: center; color: #8b949e; margin-top: 15px;">
+        Current Margin: <strong id="statMargin" style="color: var(--secondary);">0%</strong>
+      </p>
     </div>
 
     <div class="card">
-      <h3>💸 Tax & Fee Checker</h3>
-      <input type="number" id="sendAmount" placeholder="Amount (KES)" oninput="calcFees()">
-      <select id="transType" onchange="calcFees()" style="width:100%; margin-top:10px; padding:8px; background:#0d1117; color:white; border:1px solid #30363d;">
+      <h3>Summary Breakdown</h3>
+      <table id="summaryTable">
+        <tr><td>Total Stock Value</td><td id="statCost">KES 0</td></tr>
+        <tr><td>Items in Stock</td><td id="statItems">0</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="tax" class="app-screen">
+    <div class="card">
+      <h3>Fee Check</h3>
+      <label style="color: #8b949e; font-size: 0.9rem;">Amount to Transact</label>
+      <input type="number" id="sendAmount" placeholder="Enter KES..." oninput="calcFees()">
+      
+      <label style="color: #8b949e; font-size: 0.9rem;">Transaction Type</label>
+      <select id="transType" onchange="calcFees()">
         <option value="send">Send Money</option>
         <option value="withdraw">Agent Withdrawal</option>
       </select>
-      <div class="result-display" style="color: var(--secondary); border-color: var(--secondary);" id="totalFee">Fee: KES 0</div>
-      <div style="font-size: 0.8rem; color: #8b949e;">Incl. 15% Excise Tax: <span id="taxDisplay">KES 0</span></div>
+
+      <div style="background: rgba(255, 215, 0, 0.1); border: 1px dashed var(--secondary); padding: 15px; border-radius: 8px; text-align: center; margin-top: 20px;">
+        <span style="display: block; color: #8b949e; font-size: 0.8rem;">Total Deduction</span>
+        <strong style="color: var(--secondary); font-size: 1.5rem;" id="totalFee">KES 0</strong>
+      </div>
+      
+      <p style="text-align: center; font-size: 0.8rem; color: #8b949e; margin-top: 10px;">
+        Govt Excise Tax (15%): <span id="taxDisplay">KES 0.00</span>
+      </p>
     </div>
   </div>
 
   <script>
+    // --- STATE MANAGEMENT ---
     let inventory = JSON.parse(localStorage.getItem('joeHubData')) || [];
+    let isMenuOpen = false;
 
-    // Chart Setup
-    const ctx = document.getElementById('profitChart').getContext('2d');
-    let myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: { labels: ['Cost', 'Profit'], datasets: [{ data: [1, 1], backgroundColor: ['#30363d', '#00D366'], borderWidth: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: 'white' } } } }
-    });
+    // --- NAVIGATION LOGIC ---
+    function toggleMenu() {
+        const menu = document.getElementById('sideMenu');
+        isMenuOpen = !isMenuOpen;
+        menu.style.width = isMenuOpen ? "250px" : "0";
+    }
 
+    function showScreen(screenId, linkElement) {
+        // Hide all screens
+        document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active-screen'));
+        // Show target screen
+        document.getElementById(screenId).classList.add('active-screen');
+        
+        // Update Menu UI
+        document.querySelectorAll('.side-menu a').forEach(el => el.classList.remove('active'));
+        if(linkElement) linkElement.classList.add('active');
+        
+        toggleMenu(); // Close menu after selection
+        if(screenId === 'analytics') updateAnalytics(); // Refresh charts if needed
+    }
+
+    // --- INVENTORY LOGIC ---
     function addItem() {
         const name = document.getElementById('itemName').value;
         const qty = parseInt(document.getElementById('itemQty').value) || 0;
         const buy = parseFloat(document.getElementById('itemCost').value) || 0;
         const sell = parseFloat(document.getElementById('itemSell').value) || 0;
 
-        if(!name || qty <= 0) return alert("Enter item name and quantity!");
+        if(!name || qty <= 0) return alert("Please fill in valid details!");
 
         inventory.push({ name, qty, buy, sell, totalProfit: (sell - buy) * qty });
-        saveAndRefresh();
-        ['itemName','itemCost','itemSell'].forEach(id => document.getElementById(id).value = '');
+        saveData();
+        renderInventory();
+        
+        // Clear fields
+        ['itemName', 'itemCost', 'itemSell'].forEach(id => document.getElementById(id).value = '');
+        alert("Item Added! 📦");
     }
 
     function deleteItem(index) {
-        inventory.splice(index, 1);
-        saveAndRefresh();
+        if(confirm("Delete this item?")) {
+            inventory.splice(index, 1);
+            saveData();
+            renderInventory();
+        }
     }
 
-    function saveAndRefresh() {
+    function saveData() {
         localStorage.setItem('joeHubData', JSON.stringify(inventory));
-        renderInventory();
-        updateSummary();
+        updateAnalytics(); // Ensure charts stay updated in background
     }
 
     function renderInventory() {
@@ -145,69 +207,85 @@
                 <td>${item.name}</td>
                 <td>${item.qty}</td>
                 <td style="color: var(--primary)">${item.totalProfit.toLocaleString()}</td>
-                <td><button class="delete-btn" onclick="deleteItem(${index})">🗑️</button></td>
+                <td><button onclick="deleteItem(${index})" style="background:none; border:none; cursor:pointer;">❌</button></td>
             </tr>
         `).join('');
     }
 
-    function updateSummary() {
-        let profit = 0, cost = 0, rev = 0;
-        inventory.forEach(i => { profit += i.totalProfit; cost += (i.buy * i.qty); rev += (i.sell * i.qty); });
-        
-        document.getElementById('totalProfit').innerText = `Total Profit: KES ${profit.toLocaleString()}`;
-        myChart.data.datasets[0].data = [cost, profit];
-        myChart.update();
-    }
+    // --- ANALYTICS LOGIC ---
+    let myChart = null;
 
-    // MODAL LOGIC
-    function openModal() {
+    function updateAnalytics() {
         let profit = 0, cost = 0, revenue = 0, items = 0;
-        inventory.forEach(i => { 
-            profit += i.totalProfit; 
-            cost += (i.buy * i.qty); 
+        inventory.forEach(i => {
+            profit += i.totalProfit;
+            cost += (i.buy * i.qty);
             revenue += (i.sell * i.qty);
             items += i.qty;
         });
 
         const margin = revenue > 0 ? ((profit / revenue) * 100).toFixed(1) : 0;
 
-        document.getElementById('modalStats').innerHTML = `
-            <div class="summary-row"><span>Total Items in Stock:</span><strong>${items}</strong></div>
-            <div class="summary-row"><span>Total Inventory Cost:</span><strong>KES ${cost.toLocaleString()}</strong></div>
-            <div class="summary-row"><span>Expected Revenue:</span><strong>KES ${revenue.toLocaleString()}</strong></div>
-            <div class="summary-row"><span>Net Profit Margin:</span><strong style="color: var(--secondary)">${margin}%</strong></div>
-            <div class="summary-row" style="border:none; margin-top:10px;">
-                <span>Take-Home Profit:</span><strong style="color: var(--primary); font-size:1.2rem;">KES ${profit.toLocaleString()}</strong>
-            </div>
-        `;
-        document.getElementById('summaryModal').style.display = "block";
+        document.getElementById('statRevenue').innerText = `KES ${revenue.toLocaleString()}`;
+        document.getElementById('statProfit').innerText = `KES ${profit.toLocaleString()}`;
+        document.getElementById('statCost').innerText = `KES ${cost.toLocaleString()}`;
+        document.getElementById('statItems').innerText = items;
+        document.getElementById('statMargin').innerText = `${margin}%`;
+
+        // Chart Logic
+        const ctx = document.getElementById('profitChart').getContext('2d');
+        if(myChart) myChart.destroy(); // Prevent duplicate charts
+
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cost (Expense)', 'Net Profit'],
+                datasets: [{
+                    data: [cost, profit > 0 ? profit : 0],
+                    backgroundColor: ['#30363d', '#00D366'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: 'white' } } } }
+        });
     }
 
-    function closeModal() { document.getElementById('summaryModal').style.display = "none"; }
-
+    // --- TAX LOGIC ---
     function calcFees() {
         const amt = parseFloat(document.getElementById('sendAmount').value) || 0;
         const type = document.getElementById('transType').value;
-        let baseFee = (amt <= 100) ? 0 : (amt <= 1000) ? 12 : 25;
+        let baseFee = (amt <= 100) ? 0 : (amt <= 1000) ? 12 : 25; // Simplified logic
+        
+        if(type === 'withdraw') {
+             if(amt <= 100) baseFee = 10;
+             else if(amt <= 1000) baseFee = 28;
+             else baseFee = 50;
+        }
+
         const tax = baseFee * 0.15;
-        document.getElementById('totalFee').innerText = `Total: KES ${(baseFee + tax).toFixed(2)}`;
+        document.getElementById('totalFee').innerText = `KES ${(baseFee + tax).toFixed(2)}`;
         document.getElementById('taxDisplay').innerText = `KES ${tax.toFixed(2)}`;
     }
 
+    // --- UTILS ---
     function downloadPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("JOE HUB BIASHARA - SALES REPORT", 14, 15);
-        doc.autoTable({ head: [['Item', 'Qty', 'Profit']], body: inventory.map(i => [i.name, i.qty, i.totalProfit]), startY: 25 });
+        doc.text("JOE HUB - INVENTORY REPORT", 14, 15);
+        doc.autoTable({ head: [['Item', 'Qty', 'Buy', 'Sell', 'Profit']], body: inventory.map(i => [i.name, i.qty, i.buy, i.sell, i.totalProfit]), startY: 25 });
         doc.save("JoeHub_Report.pdf");
     }
 
-    function refreshPage() { if(confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
+    function refreshPage() {
+        if(confirm("⚠️ Reset App? This deletes all data.")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
 
-    window.onclick = function(event) { if (event.target == document.getElementById('summaryModal')) closeModal(); }
-
+    // Init
     renderInventory();
-    updateSummary();
+    updateAnalytics();
   </script>
 </body>
 </html>
