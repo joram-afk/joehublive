@@ -16,24 +16,32 @@
     header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 10px; }
     h1 span { color: var(--primary); }
 
-    .action-bar { max-width: 1400px; margin: 0 auto 20px; display: flex; gap: 10px; justify-content: flex-end; }
+    /* ACTION BAR */
+    .action-bar { max-width: 1400px; margin: 0 auto 20px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
     button { cursor: pointer; border: none; border-radius: 6px; padding: 10px 15px; font-weight: bold; transition: 0.3s; }
     .btn-pdf { background: var(--secondary); color: black; }
+    .btn-view { background: #5865f2; color: white; } /* Blue for View */
     .btn-refresh { background: #30363d; color: white; }
     .btn-add { background: var(--primary); color: white; margin-top: 10px; width: 100%; }
 
     .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
     .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
     
-    /* Table Styling */
     table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
     th { text-align: left; color: #8b949e; padding-bottom: 10px; border-bottom: 1px solid #333; }
     td { padding: 10px 0; border-bottom: 1px solid #21262d; }
     .delete-btn { color: var(--danger); background: none; padding: 0; font-size: 1.1rem; }
 
     .result-display { background: rgba(0, 211, 102, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; text-align: center; font-size: 1.3rem; font-weight: bold; color: var(--primary); margin: 15px 0; }
-    .chart-container { height: 300px; width: 100%; margin-top: 20px; }
     input { background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; }
+
+    /* MODAL STYLING */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+    .modal-content { background: var(--card); margin: 10% auto; padding: 30px; border: 1px solid var(--primary); border-radius: 15px; width: 90%; max-width: 500px; position: relative; }
+    .close-modal { position: absolute; right: 20px; top: 15px; font-size: 1.5rem; cursor: pointer; color: #8b949e; }
+    .summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #30363d; }
+    .summary-row span { color: #8b949e; }
+    .summary-row strong { color: var(--text); }
   </style>
 </head>
 <body>
@@ -45,11 +53,21 @@
 
   <div class="action-bar">
     <button class="btn-refresh" onclick="refreshPage()">🔄 Reset All</button>
-    <button class="btn-pdf" onclick="downloadPDF()">📄 Download PDF Report</button>
+    <button class="btn-view" onclick="openModal()">👁️ View Summary</button>
+    <button class="btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
+  </div>
+
+  <div id="summaryModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h2 style="color: var(--primary); margin-top: 0;">Business Report</h2>
+      <div id="modalStats">
+        </div>
+      <button class="btn-add" style="background: #30363d;" onclick="closeModal()">Close View</button>
+    </div>
   </div>
 
   <div class="dashboard-grid">
-    
     <div class="card">
       <h3>📦 Add Item</h3>
       <input type="text" id="itemName" placeholder="Item Name (e.g. Shoes)">
@@ -62,72 +80,52 @@
       
       <table>
         <thead>
-          <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Profit</th>
-            <th></th>
-          </tr>
+          <tr><th>Item</th><th>Qty</th><th>Profit</th><th></th></tr>
         </thead>
         <tbody id="inventoryBody"></tbody>
       </table>
     </div>
 
     <div class="card">
-      <h3>📊 Performance Summary</h3>
+      <h3>📊 Profit Breakdown</h3>
       <div class="result-display" id="totalProfit">Total Profit: KES 0</div>
-      <div style="font-size: 0.9rem; color: #8b949e;">
-        Margin: <span id="totalMargin" style="color: var(--secondary);">0%</span>
-      </div>
-      <div class="chart-container">
-        <canvas id="profitChart"></canvas>
-      </div>
+      <div style="height: 250px;"><canvas id="profitChart"></canvas></div>
     </div>
 
     <div class="card">
       <h3>💸 Tax & Fee Checker</h3>
-      <label style="font-size: 0.8rem; color: #8b949e;">Transaction Amount (KES)</label>
-      <input type="number" id="sendAmount" placeholder="e.g. 1000" oninput="calcFees()">
+      <input type="number" id="sendAmount" placeholder="Amount (KES)" oninput="calcFees()">
       <select id="transType" onchange="calcFees()" style="width:100%; margin-top:10px; padding:8px; background:#0d1117; color:white; border:1px solid #30363d;">
         <option value="send">Send Money</option>
         <option value="withdraw">Agent Withdrawal</option>
       </select>
       <div class="result-display" style="color: var(--secondary); border-color: var(--secondary);" id="totalFee">Fee: KES 0</div>
-      <div style="font-size: 0.8rem; color: #8b949e;">Includes 15% Govt Excise Tax: <span id="taxDisplay">KES 0</span></div>
+      <div style="font-size: 0.8rem; color: #8b949e;">Incl. 15% Excise Tax: <span id="taxDisplay">KES 0</span></div>
     </div>
-
   </div>
 
   <script>
     let inventory = JSON.parse(localStorage.getItem('joeHubData')) || [];
 
-    // Initialize Chart
+    // Chart Setup
     const ctx = document.getElementById('profitChart').getContext('2d');
     let myChart = new Chart(ctx, {
         type: 'doughnut',
-        data: {
-            labels: ['Total Cost', 'Total Profit'],
-            datasets: [{ data: [1, 1], backgroundColor: ['#30363d', '#00D366'], borderWidth: 0 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } } }
+        data: { labels: ['Cost', 'Profit'], datasets: [{ data: [1, 1], backgroundColor: ['#30363d', '#00D366'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: 'white' } } } }
     });
 
     function addItem() {
         const name = document.getElementById('itemName').value;
-        const qty = parseInt(document.getElementById('itemQty').value);
-        const buy = parseFloat(document.getElementById('itemCost').value);
-        const sell = parseFloat(document.getElementById('itemSell').value);
+        const qty = parseInt(document.getElementById('itemQty').value) || 0;
+        const buy = parseFloat(document.getElementById('itemCost').value) || 0;
+        const sell = parseFloat(document.getElementById('itemSell').value) || 0;
 
-        if(!name || isNaN(buy) || isNaN(sell)) return alert("Please fill all item fields!");
+        if(!name || qty <= 0) return alert("Enter item name and quantity!");
 
-        const profitPerItem = sell - buy;
-        inventory.push({ name, qty, buy, sell, totalProfit: profitPerItem * qty });
-        
+        inventory.push({ name, qty, buy, sell, totalProfit: (sell - buy) * qty });
         saveAndRefresh();
-        // Clear inputs
-        document.getElementById('itemName').value = '';
-        document.getElementById('itemCost').value = '';
-        document.getElementById('itemSell').value = '';
+        ['itemName','itemCost','itemSell'].forEach(id => document.getElementById(id).value = '');
     }
 
     function deleteItem(index) {
@@ -142,8 +140,7 @@
     }
 
     function renderInventory() {
-        const body = document.getElementById('inventoryBody');
-        body.innerHTML = inventory.map((item, index) => `
+        document.getElementById('inventoryBody').innerHTML = inventory.map((item, index) => `
             <tr>
                 <td>${item.name}</td>
                 <td>${item.qty}</td>
@@ -154,56 +151,61 @@
     }
 
     function updateSummary() {
-        let totalProfit = 0;
-        let totalCost = 0;
-        let totalRevenue = 0;
-
-        inventory.forEach(item => {
-            totalProfit += item.totalProfit;
-            totalCost += (item.buy * item.qty);
-            totalRevenue += (item.sell * item.qty);
-        });
-
-        document.getElementById('totalProfit').innerText = `Total Profit: KES ${totalProfit.toLocaleString()}`;
-        const margin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : 0;
-        document.getElementById('totalMargin').innerText = `${margin}%`;
-
-        myChart.data.datasets[0].data = [totalCost, totalProfit];
+        let profit = 0, cost = 0, rev = 0;
+        inventory.forEach(i => { profit += i.totalProfit; cost += (i.buy * i.qty); rev += (i.sell * i.qty); });
+        
+        document.getElementById('totalProfit').innerText = `Total Profit: KES ${profit.toLocaleString()}`;
+        myChart.data.datasets[0].data = [cost, profit];
         myChart.update();
     }
+
+    // MODAL LOGIC
+    function openModal() {
+        let profit = 0, cost = 0, revenue = 0, items = 0;
+        inventory.forEach(i => { 
+            profit += i.totalProfit; 
+            cost += (i.buy * i.qty); 
+            revenue += (i.sell * i.qty);
+            items += i.qty;
+        });
+
+        const margin = revenue > 0 ? ((profit / revenue) * 100).toFixed(1) : 0;
+
+        document.getElementById('modalStats').innerHTML = `
+            <div class="summary-row"><span>Total Items in Stock:</span><strong>${items}</strong></div>
+            <div class="summary-row"><span>Total Inventory Cost:</span><strong>KES ${cost.toLocaleString()}</strong></div>
+            <div class="summary-row"><span>Expected Revenue:</span><strong>KES ${revenue.toLocaleString()}</strong></div>
+            <div class="summary-row"><span>Net Profit Margin:</span><strong style="color: var(--secondary)">${margin}%</strong></div>
+            <div class="summary-row" style="border:none; margin-top:10px;">
+                <span>Take-Home Profit:</span><strong style="color: var(--primary); font-size:1.2rem;">KES ${profit.toLocaleString()}</strong>
+            </div>
+        `;
+        document.getElementById('summaryModal').style.display = "block";
+    }
+
+    function closeModal() { document.getElementById('summaryModal').style.display = "none"; }
 
     function calcFees() {
         const amt = parseFloat(document.getElementById('sendAmount').value) || 0;
         const type = document.getElementById('transType').value;
-        let baseFee = (amt <= 100) ? 0 : (amt <= 1000) ? 12 : 25; // Simplified
+        let baseFee = (amt <= 100) ? 0 : (amt <= 1000) ? 12 : 25;
         const tax = baseFee * 0.15;
         document.getElementById('totalFee').innerText = `Total: KES ${(baseFee + tax).toFixed(2)}`;
         document.getElementById('taxDisplay').innerText = `KES ${tax.toFixed(2)}`;
-    }
-
-    function refreshPage() {
-        if(confirm("This will clear all saved data. Continue?")) {
-            localStorage.clear();
-            location.reload();
-        }
     }
 
     function downloadPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         doc.text("JOE HUB BIASHARA - SALES REPORT", 14, 15);
-        
-        const rows = inventory.map(i => [i.name, i.qty, i.buy, i.sell, i.totalProfit]);
-        doc.autoTable({
-            head: [['Item', 'Qty', 'Buy Price', 'Sell Price', 'Net Profit']],
-            body: rows,
-            startY: 25
-        });
-        
+        doc.autoTable({ head: [['Item', 'Qty', 'Profit']], body: inventory.map(i => [i.name, i.qty, i.totalProfit]), startY: 25 });
         doc.save("JoeHub_Report.pdf");
     }
 
-    // Initial Load
+    function refreshPage() { if(confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
+
+    window.onclick = function(event) { if (event.target == document.getElementById('summaryModal')) closeModal(); }
+
     renderInventory();
     updateSummary();
   </script>
