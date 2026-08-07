@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input id="email" type="email" placeholder="Email" required>
+    <input id="password" type="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+  <div id="msg"></div>
+
+  <p><a href="register.html">Create an account</a></p>
+
+  <script src="auth.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const msg = document.getElementById('msg');
+      msg.textContent = 'Signing in...';
+      try {
+        const user = await loginUser({ email, password });
+        // store minimal user info in localStorage for demo only
+        localStorage.setItem('loggedInUser', JSON.stringify({ email: user.email, name: user.name }));
+        msg.textContent = 'Login successful — redirecting to admin...';
+        setTimeout(() => location.href = 'admin.html', 800);
+      } catch (err) {
+        msg.textContent = err.message || String(err);
+      }
+    });
+  </script>
+</body>
+</html>
