@@ -51,8 +51,35 @@ async function loginUser({ email, password }) {
   return { name: user.name, email: user.email };
 }
 
+function saveLoggedInUser(user) {
+  localStorage.setItem('loggedInUser', JSON.stringify(user));
+}
+
+function getLoggedInUser() {
+  try {
+    return JSON.parse(localStorage.getItem('loggedInUser')) || null;
+  } catch (e) { return null; }
+}
+
+function logoutUser() {
+  localStorage.removeItem('loggedInUser');
+}
+
+function requireLogin(redirect = 'login.html') {
+  const user = getLoggedInUser();
+  if (!user) {
+    window.location.href = redirect;
+    return false;
+  }
+  return user;
+}
+
 // expose functions for pages
 window.registerUser = registerUser;
 window.loginUser = loginUser;
 window.getCloud = getCloud;
 window.updateCloud = updateCloud;
+window.saveLoggedInUser = saveLoggedInUser;
+window.getLoggedInUser = getLoggedInUser;
+window.logoutUser = logoutUser;
+window.requireLogin = requireLogin;
