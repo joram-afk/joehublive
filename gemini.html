@@ -22,19 +22,22 @@
     /* USER PROFILE SECTION */
     .user-profile { display: flex; align-items: center; gap: 15px; }
     .user-info { text-align: right; }
-    .user-name { font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 0; cursor: pointer; }
-    .user-email { font-size: 0.75rem; color: #8b949e; margin: 2px 0 0 0; cursor: pointer; }
-    .user-name:hover, .user-email:hover { color: var(--primary); }
+    .user-name { font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 0; cursor: pointer; padding: 5px; border-radius: 4px; }
+    .user-email { font-size: 0.75rem; color: #8b949e; margin: 2px 0 0 0; cursor: pointer; padding: 5px; border-radius: 4px; }
+    .user-name:hover, .user-email:hover { background: rgba(0, 211, 102, 0.1); color: var(--primary); }
     .btn-logout { background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.2s; }
     .btn-logout:hover { background: #ff2222; }
 
     /* DEBUG PANEL */
-    .debug-panel { background: var(--card); border: 1px solid var(--blue); border-radius: 8px; padding: 15px; margin-bottom: 20px; display: none; }
-    .debug-panel.show { display: block; }
-    .debug-panel h4 { color: var(--blue); margin-top: 0; }
-    .debug-input { background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; margin: 8px 0; font-size: 0.85rem; }
-    .debug-btn { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin: 5px 5px 5px 0; }
-    .debug-info { background: rgba(0, 211, 102, 0.1); padding: 10px; border-radius: 4px; font-size: 0.8rem; margin-top: 10px; color: #8b949e; }
+    .debug-panel { background: var(--card); border: 2px solid var(--primary); border-radius: 8px; padding: 15px; margin-bottom: 20px; display: none; box-shadow: 0 0 15px rgba(0, 211, 102, 0.2); }
+    .debug-panel.show { display: block; animation: slideDown 0.3s ease-out; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .debug-panel h4 { color: var(--primary); margin-top: 0; }
+    .debug-input { background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 4px; width: 100%; box-sizing: border-box; margin: 8px 0; font-size: 0.9rem; }
+    .debug-input:focus { border-color: var(--primary); outline: none; }
+    .debug-btn { background: var(--primary); color: black; border: none; padding: 10px 14px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin: 5px 5px 5px 0; transition: 0.2s; }
+    .debug-btn:hover { background: #00ff7a; transform: scale(1.05); }
+    .debug-info { background: rgba(0, 211, 102, 0.1); padding: 12px; border-radius: 4px; border-left: 3px solid var(--primary); font-size: 0.85rem; margin-top: 10px; color: #8b949e; }
 
     .side-menu { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; left: 0; background-color: #0d1117; overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.5); padding-top: 50px; }
     .side-menu a { padding: 15px 30px; text-decoration: none; font-size: 1.1rem; color: #8b949e; display: block; border-bottom: 1px solid #21262d; }
@@ -86,8 +89,8 @@
     </div>
     <div class="user-profile">
       <div class="user-info">
-        <p class="user-name" id="recipientName" title="Click to edit" onclick="toggleDebug()">Loading...</p>
-        <p class="user-email" id="recipientEmail" title="Click to edit" onclick="toggleDebug()">Loading...</p>
+        <p class="user-name" id="recipientName" title="Click to edit user details">Loading...</p>
+        <p class="user-email" id="recipientEmail" title="Click to edit user details">Loading...</p>
       </div>
       <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
@@ -114,15 +117,15 @@
   <div id="inventory" class="app-screen active-screen">
     <!-- DEBUG PANEL -->
     <div class="debug-panel" id="debugPanel">
-      <h4>🔧 Debug: Set User Details</h4>
-      <label>User Name:</label>
-      <input type="text" class="debug-input" id="debugName" placeholder="e.g., John Doe">
-      <label>User Email:</label>
-      <input type="text" class="debug-input" id="debugEmail" placeholder="e.g., john@example.com">
-      <button class="debug-btn" onclick="saveDebugUser()">✓ Save User</button>
-      <button class="debug-btn" onclick="loadDebugUser()">🔄 Reload</button>
-      <button class="debug-btn" onclick="clearDebugUser()">🗑️ Clear</button>
-      <div class="debug-info" id="debugInfo">Click Save User to test the display</div>
+      <h4>🔧 DEBUG: Set User Details (Click name or email to open)</h4>
+      <label><strong>📝 User Name:</strong></label>
+      <input type="text" class="debug-input" id="debugName" placeholder="e.g., John Doe" autocomplete="off">
+      <label><strong>✉️ User Email:</strong></label>
+      <input type="text" class="debug-input" id="debugEmail" placeholder="e.g., john@example.com" autocomplete="off">
+      <button class="debug-btn" onclick="saveDebugUser()">✓ SAVE USER</button>
+      <button class="debug-btn" onclick="loadDebugUser()">🔄 RELOAD</button>
+      <button class="debug-btn" onclick="clearDebugUser()">🗑️ CLEAR</button>
+      <div class="debug-info" id="debugInfo">📌 Tip: Fill in the fields above and click SAVE USER. Your data will show in the header!</div>
     </div>
 
     <div class="card">
@@ -196,12 +199,32 @@
     let inventory = JSON.parse(localStorage.getItem('joeInventory')) || [];
     let sales = JSON.parse(localStorage.getItem('joeSales')) || [];
 
+    // --- STORAGE HELPER ---
+    function setUserData(name, email) {
+      console.log('Setting user data:', { name, email });
+      localStorage.setItem('userName', name);
+      localStorage.setItem('userEmail', email);
+      console.log('Stored. Verification:', {
+        storedName: localStorage.getItem('userName'),
+        storedEmail: localStorage.getItem('userEmail')
+      });
+    }
+
+    function getUserData() {
+      const name = localStorage.getItem('userName');
+      const email = localStorage.getItem('userEmail');
+      console.log('Retrieved user data:', { name, email });
+      return { name, email };
+    }
+
     // --- DEBUG FUNCTIONS ---
     function toggleDebug() {
       const debugPanel = document.getElementById('debugPanel');
       debugPanel.classList.toggle('show');
       if (debugPanel.classList.contains('show')) {
+        console.log('Debug panel opened');
         loadDebugUser();
+        document.getElementById('debugName').focus();
       }
     }
 
@@ -209,16 +232,16 @@
       const name = document.getElementById('debugName').value.trim();
       const email = document.getElementById('debugEmail').value.trim();
       
+      console.log('Save button clicked:', { name, email });
+      
       if (!name || !email) {
-        alert('Please fill in both name and email');
+        alert('❌ Please fill in BOTH name and email');
         return;
       }
 
-      localStorage.setItem('userName', name);
-      localStorage.setItem('userEmail', email);
-      
+      setUserData(name, email);
       displayUserDetails(name, email);
-      document.getElementById('debugInfo').innerText = `✓ Saved: ${name} (${email})`;
+      document.getElementById('debugInfo').innerText = `✅ SAVED: ${name} (${email})`;
       
       setTimeout(() => {
         document.getElementById('debugPanel').classList.remove('show');
@@ -226,34 +249,43 @@
     }
 
     function loadDebugUser() {
-      const name = localStorage.getItem('userName') || '';
-      const email = localStorage.getItem('userEmail') || '';
-      document.getElementById('debugName').value = name;
-      document.getElementById('debugEmail').value = email;
+      const { name, email } = getUserData();
+      document.getElementById('debugName').value = name || '';
+      document.getElementById('debugEmail').value = email || '';
       
       if (name && email) {
-        document.getElementById('debugInfo').innerText = `Current: ${name} (${email})`;
+        document.getElementById('debugInfo').innerText = `📌 Current: ${name} (${email})`;
+      } else {
+        document.getElementById('debugInfo').innerText = `📌 No user data found. Fill in and click SAVE USER`;
       }
     }
 
     function clearDebugUser() {
+      console.log('Clearing user data');
       localStorage.removeItem('userName');
       localStorage.removeItem('userEmail');
       document.getElementById('debugName').value = '';
       document.getElementById('debugEmail').value = '';
       displayUserDetails('User Name', 'user@example.com');
-      document.getElementById('debugInfo').innerText = '✓ User data cleared';
+      document.getElementById('debugInfo').innerText = '✅ User data cleared';
     }
 
     // --- LOAD AND DISPLAY USER DETAILS ---
     function displayUserDetails(name, email) {
-      document.getElementById('recipientName').innerText = name;
-      document.getElementById('recipientEmail').innerText = email;
+      console.log('Displaying:', { name, email });
+      const nameEl = document.getElementById('recipientName');
+      const emailEl = document.getElementById('recipientEmail');
+      
+      nameEl.innerText = name || 'User Name';
+      emailEl.innerText = email || 'user@example.com';
+      
+      // Add click listeners to open debug panel
+      nameEl.onclick = toggleDebug;
+      emailEl.onclick = toggleDebug;
     }
 
     function loadUserDetails() {
-      const name = localStorage.getItem('userName') || 'User Name';
-      const email = localStorage.getItem('userEmail') || 'user@example.com';
+      const { name, email } = getUserData();
       displayUserDetails(name, email);
     }
 
@@ -263,7 +295,7 @@
         localStorage.removeItem('userEmail');
         localStorage.removeItem('joeInventory');
         localStorage.removeItem('joeSales');
-        alert("Logged out successfully!");
+        alert("✅ Logged out successfully!");
         window.location.href = '/login.html';
       }
     }
@@ -407,6 +439,7 @@
     window.onclick = function(e) { if(e.target == document.getElementById('summaryModal')) closeModal(); }
 
     // Initialize
+    console.log('Page loaded. Initializing user details...');
     loadUserDetails();
     renderInventory();
     renderSales();
