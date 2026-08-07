@@ -1,79 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta name="google-adsense-account" content="ca-pub-2262359390313772">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2262359390313772" crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOE HUB - Digital Resource Terminal</title>
-    <style>
-        :root { --primary: #00ff41; --bg: #000; }
-        body { margin: 0; background: var(--bg); font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
-        canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.3; }
-        #content-layer { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 60px 20px; text-align: center; }
-        .logo { font-size: 3rem; font-weight: 900; color: var(--primary); letter-spacing: 10px; text-shadow: 0 0 20px var(--primary); }
-        .tagline { opacity: 0.6; letter-spacing: 3px; font-size: 0.9rem; margin-top: 10px; }
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 50px 0; text-align: left; }
-        .info-card { background: rgba(11, 14, 26, 0.9); padding: 30px; border-radius: 15px; border: 1px solid rgba(0, 255, 65, 0.2); }
-        .info-card h3 { color: var(--primary); margin-bottom: 10px; }
-        .article-preview { background: rgba(11, 14, 26, 0.8); padding: 25px; border-radius: 12px; border-left: 3px solid var(--primary); margin-bottom: 20px; display: block; text-decoration: none; color: white; text-align: left; }
-        .btn-main { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 15px 45px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; text-decoration: none; display: inline-block; }
-        .btn-main:hover { background: var(--primary); color: black; }
-        footer { margin-top: 80px; padding: 30px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; opacity: 0.6; }
-        footer a { color: var(--primary); text-decoration: none; margin: 0 10px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Redirecting...</title>
+  <meta http-equiv="refresh" content="0; url=login.html">
+  <style>
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+    .box { text-align:center; }
+    a { color: #0366d6; }
+  </style>
 </head>
 <body>
-    <canvas id="matrix"></canvas>
-    <div id="content-layer">
-        <header>
-            <div class="logo">JOE HUB</div>
-            <p class="tagline">OPTIMIZED DIGITAL RESOURCE ARCHIVE</p>
-        </header>
-
-        <div class="info-grid">
-            <div class="info-card">
-                <h3>Cloud Connectivity</h3>
-                <p>Advanced API integration for real-time access to cloud-based data repositories.</p>
-            </div>
-            <div class="info-card">
-                <h3>Security Protocols</h3>
-                <p>Infrastructure built with encrypted protocols for modern digital operators.</p>
-            </div>
-        </div>
-
-        <div style="text-align: left; margin: 40px 0;">
-            <div style="font-size: 0.7rem; letter-spacing: 4px; opacity: 0.5; text-transform: uppercase; margin-bottom: 20px;">Featured Intelligence</div>
-            <a href="gemini.html" class="article-preview">
-                <h4>The Impact of AI on Web Development in 2026</h4>
-                <p>How generative models are redefining the role of the modern developer...</p>
-            </a>
-        </div>
-
-        <a href="candy.html" class="btn-main">EXPLORE ARCHIVE</a>
-
-        <footer>
-            <p>&copy; 2026 JOE HUB | <a href="about.html">About Us</a> | <a href="contact.html">Contact</a> | <a href="privacy.html">Privacy Policy</a></p>
-        </footer>
-    </div>
-
+  <div class="box">
+    <p>If you are not redirected automatically, <a href="login.html">click here to go to Login</a>.</p>
     <script>
-        // MATRIX BACKGROUND
-        const canvas = document.getElementById('matrix'); const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const letters = "01010101"; const fontSize = 16;
-        const columns = canvas.width / fontSize; const drops = Array(Math.floor(columns)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00ff41"; ctx.font = fontSize + "px monospace";
-            for (let i = 0; i < drops.length; i++) {
-                const text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(draw, 33);
+      // Immediate JS redirect as fallback for clients that ignore meta refresh
+      try { window.location.replace('login.html'); } catch (e) { /* ignore */ }
     </script>
+  </div>
 </body>
 </html>
