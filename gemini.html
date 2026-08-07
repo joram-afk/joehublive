@@ -22,10 +22,19 @@
     /* USER PROFILE SECTION */
     .user-profile { display: flex; align-items: center; gap: 15px; }
     .user-info { text-align: right; }
-    .user-name { font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 0; }
-    .user-email { font-size: 0.75rem; color: #8b949e; margin: 2px 0 0 0; }
+    .user-name { font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 0; cursor: pointer; }
+    .user-email { font-size: 0.75rem; color: #8b949e; margin: 2px 0 0 0; cursor: pointer; }
+    .user-name:hover, .user-email:hover { color: var(--primary); }
     .btn-logout { background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.2s; }
     .btn-logout:hover { background: #ff2222; }
+
+    /* DEBUG PANEL */
+    .debug-panel { background: var(--card); border: 1px solid var(--blue); border-radius: 8px; padding: 15px; margin-bottom: 20px; display: none; }
+    .debug-panel.show { display: block; }
+    .debug-panel h4 { color: var(--blue); margin-top: 0; }
+    .debug-input { background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; margin: 8px 0; font-size: 0.85rem; }
+    .debug-btn { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin: 5px 5px 5px 0; }
+    .debug-info { background: rgba(0, 211, 102, 0.1); padding: 10px; border-radius: 4px; font-size: 0.8rem; margin-top: 10px; color: #8b949e; }
 
     .side-menu { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; left: 0; background-color: #0d1117; overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.5); padding-top: 50px; }
     .side-menu a { padding: 15px 30px; text-decoration: none; font-size: 1.1rem; color: #8b949e; display: block; border-bottom: 1px solid #21262d; }
@@ -77,8 +86,8 @@
     </div>
     <div class="user-profile">
       <div class="user-info">
-        <p class="user-name" id="recipientName">Loading...</p>
-        <p class="user-email" id="recipientEmail">Loading...</p>
+        <p class="user-name" id="recipientName" title="Click to edit" onclick="toggleDebug()">Loading...</p>
+        <p class="user-email" id="recipientEmail" title="Click to edit" onclick="toggleDebug()">Loading...</p>
       </div>
       <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
@@ -103,6 +112,19 @@
   </div>
 
   <div id="inventory" class="app-screen active-screen">
+    <!-- DEBUG PANEL -->
+    <div class="debug-panel" id="debugPanel">
+      <h4>🔧 Debug: Set User Details</h4>
+      <label>User Name:</label>
+      <input type="text" class="debug-input" id="debugName" placeholder="e.g., John Doe">
+      <label>User Email:</label>
+      <input type="text" class="debug-input" id="debugEmail" placeholder="e.g., john@example.com">
+      <button class="debug-btn" onclick="saveDebugUser()">✓ Save User</button>
+      <button class="debug-btn" onclick="loadDebugUser()">🔄 Reload</button>
+      <button class="debug-btn" onclick="clearDebugUser()">🗑️ Clear</button>
+      <div class="debug-info" id="debugInfo">Click Save User to test the display</div>
+    </div>
+
     <div class="card">
       <h3 style="margin-top:0;">📝 Add New Stock</h3>
       <label>Item Name</label>
@@ -174,65 +196,74 @@
     let inventory = JSON.parse(localStorage.getItem('joeInventory')) || [];
     let sales = JSON.parse(localStorage.getItem('joeSales')) || [];
 
-    // --- FETCH RECIPIENT USER DETAILS ---
-    async function fetchRecipientDetails() {
-      try {
-        // Get the logged-in user's email from localStorage (set during login)
-        const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-        
-        if (!loggedInUserEmail) {
-          console.log('No logged-in user found');
-          document.getElementById('recipientName').innerText = 'Guest User';
-          document.getElementById('recipientEmail').innerText = 'guest@example.com';
-          return;
-        }
-
-        // Fetch recipient details from your backend API
-        // Replace 'YOUR_API_ENDPOINT' with your actual backend URL
-        const response = await fetch(`/api/user?email=${encodeURIComponent(loggedInUserEmail)}`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch user details');
-        }
-
-        const userData = await response.json();
-        
-        // Display recipient's name and email
-        document.getElementById('recipientName').innerText = userData.name || 'User Name';
-        document.getElementById('recipientEmail').innerText = userData.email || 'user@example.com';
-        
-        // Optionally store in localStorage for offline access
-        localStorage.setItem('recipientName', userData.name);
-        localStorage.setItem('recipientEmail', userData.email);
-
-      } catch (error) {
-        console.error('Error fetching recipient details:', error);
-        
-        // Fallback to localStorage if API fails
-        const fallbackName = localStorage.getItem('recipientName');
-        const fallbackEmail = localStorage.getItem('recipientEmail');
-        
-        if (fallbackName && fallbackEmail) {
-          document.getElementById('recipientName').innerText = fallbackName;
-          document.getElementById('recipientEmail').innerText = fallbackEmail;
-        } else {
-          document.getElementById('recipientName').innerText = 'User Name';
-          document.getElementById('recipientEmail').innerText = 'user@example.com';
-        }
+    // --- DEBUG FUNCTIONS ---
+    function toggleDebug() {
+      const debugPanel = document.getElementById('debugPanel');
+      debugPanel.classList.toggle('show');
+      if (debugPanel.classList.contains('show')) {
+        loadDebugUser();
       }
+    }
+
+    function saveDebugUser() {
+      const name = document.getElementById('debugName').value.trim();
+      const email = document.getElementById('debugEmail').value.trim();
+      
+      if (!name || !email) {
+        alert('Please fill in both name and email');
+        return;
+      }
+
+      localStorage.setItem('userName', name);
+      localStorage.setItem('userEmail', email);
+      
+      displayUserDetails(name, email);
+      document.getElementById('debugInfo').innerText = `✓ Saved: ${name} (${email})`;
+      
+      setTimeout(() => {
+        document.getElementById('debugPanel').classList.remove('show');
+      }, 1500);
+    }
+
+    function loadDebugUser() {
+      const name = localStorage.getItem('userName') || '';
+      const email = localStorage.getItem('userEmail') || '';
+      document.getElementById('debugName').value = name;
+      document.getElementById('debugEmail').value = email;
+      
+      if (name && email) {
+        document.getElementById('debugInfo').innerText = `Current: ${name} (${email})`;
+      }
+    }
+
+    function clearDebugUser() {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      document.getElementById('debugName').value = '';
+      document.getElementById('debugEmail').value = '';
+      displayUserDetails('User Name', 'user@example.com');
+      document.getElementById('debugInfo').innerText = '✓ User data cleared';
+    }
+
+    // --- LOAD AND DISPLAY USER DETAILS ---
+    function displayUserDetails(name, email) {
+      document.getElementById('recipientName').innerText = name;
+      document.getElementById('recipientEmail').innerText = email;
+    }
+
+    function loadUserDetails() {
+      const name = localStorage.getItem('userName') || 'User Name';
+      const email = localStorage.getItem('userEmail') || 'user@example.com';
+      displayUserDetails(name, email);
     }
 
     function logout() {
       if(confirm("Are you sure you want to logout?")) {
-        // Clear all user-related data
-        localStorage.removeItem('loggedInUserEmail');
-        localStorage.removeItem('recipientName');
-        localStorage.removeItem('recipientEmail');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
         localStorage.removeItem('joeInventory');
         localStorage.removeItem('joeSales');
         alert("Logged out successfully!");
-        
-        // Redirect to login page (adjust URL as needed)
         window.location.href = '/login.html';
       }
     }
@@ -375,8 +406,8 @@
 
     window.onclick = function(e) { if(e.target == document.getElementById('summaryModal')) closeModal(); }
 
-    // Initialize - Load recipient details when page loads
-    fetchRecipientDetails();
+    // Initialize
+    loadUserDetails();
     renderInventory();
     renderSales();
   </script>
