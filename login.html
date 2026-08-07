@@ -72,16 +72,16 @@
         // save minimal identity and redirect
         saveLoggedInUser({ email: user.email, name: user.name });
         showMsg('Signed in — redirecting...');
-        setTimeout(() => location.href = 'admin.html', 600);
+        setTimeout(() => location.href = 'gemini.html', 600);
       } catch (err) {
         showMsg(err && err.message ? err.message : String(err));
       }
     });
 
-    // optional: if already logged in, go straight to admin
+    // optional: if already logged in, go straight to gemini
     (function(){
       const u = getLoggedInUser && getLoggedInUser();
-      if(u) location.replace('admin.html');
+      if(u) location.replace('gemini.html');
     })();
   </script>
 </body>
