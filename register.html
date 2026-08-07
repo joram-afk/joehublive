@@ -2,34 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Register</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register — Joram</title>
+  <style>
+    :root{
+      --bg1:#0f1724; --bg2:#0b1220; --card:#0f1728; --accent:#7c3aed; --muted:#9aa4b2; --glass:rgba(255,255,255,0.04);
+      --radius:14px; --fw:500;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue"; background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:#e6eef8}
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+    .card{width:100%;max-width:420px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:var(--radius);padding:28px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#4c1d95);display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:6px 0 20px;color:var(--muted);font-size:13px}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;margin-bottom:12px;font-size:14px}
+    .row{display:flex;gap:8px}
+    button.primary{width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#5b21b6);color:white;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(92,33,179,0.18)}
+    .muted-link{display:block;margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
+    .inline{display:flex;gap:8px;align-items:center;justify-content:center}
+    .alert{font-size:13px;color:#ffd7d7;background:rgba(255,215,215,0.04);padding:10px;border-radius:8px;margin-bottom:12px;border:1px solid rgba(255,215,215,0.06)}
+    .footer{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
+  </style>
 </head>
 <body>
-  <h2>Register</h2>
-  <form id="registerForm">
-    <input id="name" placeholder="Name" required>
-    <input id="email" type="email" placeholder="Email" required>
-    <input id="password" type="password" placeholder="Password" required>
-    <button type="submit">Register</button>
-  </form>
-  <div id="msg"></div>
+  <div class="wrap">
+    <main class="card" role="main" aria-labelledby="register">
+      <div class="brand">
+        <div class="logo">J</div>
+        <div>
+          <h1 id="register">Create an account</h1>
+          <p class="lead">Sign up to access your business</p>
+        </div>
+      </div>
+
+      <div id="msg" style="display:none" class="alert" role="status"></div>
+
+      <form id="registerForm" autocomplete="on" novalidate>
+        <label for="name">Name</label>
+        <input id="name" type="text" placeholder="Your name" required />
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" placeholder="you@example.com" required />
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="••••••••" required />
+        <button class="primary" type="submit">Register</button>
+      </form>
+
+      <div class="inline" style="margin-top:14px">
+        <div style="flex:1;text-align:left"><a class="muted-link" href="login.html">Have an account?</a></div>
+        <div style="flex:1;text-align:right"><a class="muted-link" href="#" id="help">Need help?</a></div>
+      </div>
+
+      <p class="footer">for business production.</p>
+    </main>
+  </div>
 
   <script src="auth.js"></script>
   <script>
+    const msgBox = document.getElementById('msg');
+    function showMsg(text, show=true) { msgBox.style.display = show ? 'block' : 'none'; msgBox.textContent = text; }
+
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim().toLowerCase();
-      const password = document.getElementById('password').value;
-      const msg = document.getElementById('msg');
-      msg.textContent = 'Registering...';
+      showMsg('Registering...', true);
       try {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
         await registerUser({ name, email, password });
-        msg.textContent = 'Registered — redirecting to login...';
+        showMsg('Registered — redirecting to login...');
         setTimeout(() => location.href = 'login.html', 800);
       } catch (err) {
-        msg.textContent = err.message || String(err);
+        showMsg(err && err.message ? err.message : String(err));
       }
     });
   </script>
