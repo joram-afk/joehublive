@@ -7,97 +7,54 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="/assets/js/auth.js" defer></script>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background: #0f172a; color: #e6eef8; display:flex;align-items:center;justify-content:center;height:100vh;margin:0 }
-    .card{ background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); padding:28px; border-radius:12px; box-shadow:0 10px 30px rgba(2,6,23,0.6); width:100%; max-width:420px }
-    h1{ margin:0 0 8px 0; font-size:20px }
-    p.lead{ margin:0 0 18px 0; color:#9fb0d6; font-size:14px }
-    form { max-width: 420px; margin-bottom: 16px }
-    label { display:block; margin-bottom:8px; font-size:13px }
-    input[type=email], input[type=password] { width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit }
-    button[type=submit]{ width:100%; padding:12px; border-radius:10px; border:0; background:linear-gradient(90deg,#7c3aed,#5b21b6); color:white; font-weight:700; cursor:pointer }
-
-    .divider{ display:flex; align-items:center; gap:12px; color:#93b0d9; margin:18px 0 }
-    .divider::before, .divider::after{ content:''; flex:1; height:1px; background:rgba(255,255,255,0.04); border-radius:2px }
-
-    /* Google custom button styled to match the site */
-    .google-btn{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.06); background:linear-gradient(90deg,#fff 0%, #f1f5f9 100%); color:#0f172a; font-weight:600 }
-    .google-logo{ width:18px; height:18px }
-    .muted{ color:#93b0d9; font-size:13px; margin-top:12px; text-align:center }
-
-    /* ensure Google render button (if used) sits hidden but available */
-    #gRenderDiv{ display:none }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; }
+    form { max-width: 420px; margin-bottom: 16px; }
+    label { display:block; margin-bottom:8px; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Welcome back</h1>
-    <p class="lead">Sign in to access your business</p>
+  <h1>Login</h1>
 
-    <!-- Google sign-in / fallback -->
-    <div style="text-align:center">
-      <div class="divider">or continue with</div>
-      <div>
-        <button id="googleBtn" class="google-btn" type="button" aria-label="Sign in with Google">
-          <svg class="google-logo" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#4285f4" d="M533.5 278.4c0-18.5-1.6-36.4-4.7-53.7H272v101.6h146.9c-6.3 33.8-25.4 62.5-54.3 81.6v67.8h87.6c51.3-47.3 80.3-116.8 80.3-197.3z"/>
-            <path fill="#34a853" d="M272 544.3c73.6 0 135.4-24.4 180.5-66.3l-87.6-67.8c-24.4 16.4-55.6 26-92.9 26-71.3 0-131.7-48.1-153.4-112.6H30.6v70.8C75.8 487.9 168.6 544.3 272 544.3z"/>
-            <path fill="#fbbc04" d="M118.6 325.9c-10.9-32.6-10.9-67.8 0-100.4V154.7H30.6c-40.7 81.6-40.7 178.9 0 260.5l88-89.3z"/>
-            <path fill="#ea4335" d="M272 107.7c39.9 0 75.8 13.7 104.1 40.6l78-78C405.9 24.1 344.1 0 272 0 168.6 0 75.8 56.4 30.6 154.7l88 70.8C140.3 156 200.7 107.7 272 107.7z"/>
-          </svg>
-          Continue with Google
-        </button>
-        <div id="gRenderDiv" aria-hidden="true"></div>
-      </div>
-      <div class="muted">Don't have an account? <a href="register.html" style="color:#cbd9ff; text-decoration:none;">Create account</a></div>
-    </div>
+  <!-- existing username/password form (keep if you already have one) -->
+  <form id="loginForm">
+    <label>Email: <input type="email" id="email" name="email" required></label>
+    <label>Password: <input type="password" id="password" name="password" required></label>
+    <button type="submit">Login</button>
+  </form>
 
-    <form id="loginForm" style="margin-top:18px" autocomplete="on" novalidate>
-      <label>Email: <input type="email" id="email" name="email" required></label>
-      <label>Password: <input type="password" id="password" name="password" required></label>
-      <button type="submit">Sign in</button>
-    </form>
+  <hr>
 
-    <p class="muted">for business production.</p>
-  </div>
+  <!-- Google sign-in button placeholder -->
+  <div id="gSignInDiv"></div>
 
   <script>
-    // Replace with your Google OAuth Client ID or leave as placeholder
-    const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+    // Replace with your Google OAuth Client ID. See AUTHENTICATION.md for instructions.
+    const GOOGLE_CLIENT_ID = '486225891520-i6brd43odhrskjadi52gd0glpujse56u.apps.googleusercontent.com';
 
     function onGoogleLoaded() {
-      if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID') {
-        // show non-functional but helpful button — clicking will explain how to configure
-        document.getElementById('googleBtn').addEventListener('click', () => {
-          alert('Google Client ID is not configured. Replace GOOGLE_CLIENT_ID in this file with your OAuth client ID.');
-        });
-        return;
-      }
-
-      // initialize Google ID client
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse
       });
-
-      // render (hidden) official button to ensure branding/flow works, but keep our custom button for style
-      google.accounts.id.renderButton(document.getElementById('gRenderDiv'), { theme: 'outline', size: 'large' });
-
-      // when our custom button is clicked, trigger the Google one-tap/popup flow
-      document.getElementById('googleBtn').addEventListener('click', () => {
-        // prompt is the recommended UX; it will show One Tap where supported or a popup
-        google.accounts.id.prompt();
-      });
+      google.accounts.id.renderButton(
+        document.getElementById('gSignInDiv'),
+        { theme: 'outline', size: 'large' }
+      );
+      // optional: show One Tap prompt
+      // google.accounts.id.prompt();
     }
 
     function handleCredentialResponse(response) {
-      // reuse the shared handler in /assets/js/auth.js
+      // auth.js exposes handleGoogleCredential to reuse logic
       window.handleGoogleCredential(response, { after: 'login' });
     }
 
+    // Wait until the client library is loaded, then init
     window.addEventListener('load', function () {
       if (window.google && google.accounts && google.accounts.id) {
         onGoogleLoaded();
       } else {
+        // if script hasn't loaded yet, poll a few times
         const intv = setInterval(() => {
           if (window.google && google.accounts && google.accounts.id) {
             clearInterval(intv);
@@ -107,11 +64,12 @@
       }
     });
 
-    // preserve existing local login handler
+    // Example: existing login form handler (client-only). Customize to integrate with your backend.
     document.getElementById('loginForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const email = document.getElementById('email').value;
       const pw = document.getElementById('password').value;
+      // TODO: send to your server for authentication or handle client-only flow
       alert('Local login submitted for ' + email + '. Implement server-side auth.');
     });
   </script>
