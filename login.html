@@ -62,11 +62,10 @@
 
   <script>
     // Replace with your Google OAuth Client ID or leave as placeholder
-    const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+    const GOOGLE_CLIENT_ID = '486225891520-i6brd43odhrskjadi52gd0glpujse56u.apps.googleusercontent.com';
 
     function onGoogleLoaded() {
       if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID') {
-        // show non-functional but helpful button — clicking will explain how to configure
         document.getElementById('googleBtn').addEventListener('click', () => {
           alert('Google Client ID is not configured. Replace GOOGLE_CLIENT_ID in this file with your OAuth client ID.');
         });
@@ -84,7 +83,6 @@
 
       // when our custom button is clicked, trigger the Google one-tap/popup flow
       document.getElementById('googleBtn').addEventListener('click', () => {
-        // prompt is the recommended UX; it will show One Tap where supported or a popup
         google.accounts.id.prompt();
       });
     }
