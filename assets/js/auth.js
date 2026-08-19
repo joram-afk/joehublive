@@ -1,5 +1,5 @@
 // Lightweight helper to handle Google credential response and session storage
-// Updated to call server-side verification endpoint /api/auth/google
+// Updated to support client-only flow on GitHub Pages (no server)
 
 function parseJwt (token) {
   try {
@@ -13,6 +13,11 @@ function parseJwt (token) {
     return null;
   }
 }
+
+// Detect when running on GitHub Pages or localhost and skip server verification
+const SKIP_SERVER_VERIFY = (typeof window !== 'undefined') && (
+  window.location.hostname.endsWith('github.io') || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+);
 
 // Shared handler: when Google returns credential response call this
 // options: { after: 'login' | 'register' } to choose redirect/prefill behavior
@@ -28,7 +33,34 @@ window.handleGoogleCredential = async function(response, options = { after: 'log
     return;
   }
 
-  // Try server-side verification first
+  // If running on GitHub Pages or explicitly opted-out server, store client-side only
+  if (SKIP_SERVER_VERIFY) {
+    try {
+      localStorage.setItem('google_id_token', idToken);
+      localStorage.setItem('google_user', JSON.stringify(user));
+      // also set the app's expected userName/userEmail used by pages like gemini.html
+      if (user.name) localStorage.setItem('userName', user.name);
+      if (user.email) localStorage.setItem('userEmail', user.email);
+
+      if (options.after === 'register') {
+        // prefill register fields if present
+        const nameEl = document.getElementById('fullname');
+        const emailEl = document.getElementById('regEmail');
+        if (nameEl && user.name) nameEl.value = user.name;
+        if (emailEl && user.email) emailEl.value = user.email;
+        return;
+      }
+
+      // redirect to post-login page
+      window.location.href = '/gemini.html';
+      return;
+    } catch (e) {
+      console.error('Local storage write failed', e);
+      return;
+    }
+  }
+
+  // Try server-side verification first (if available)
   try {
     const res = await fetch('/api/auth/google', {
       method: 'POST',
@@ -43,26 +75,32 @@ window.handleGoogleCredential = async function(response, options = { after: 'log
 
     // server set cookie; redirect to post-login page
     if (options.after === 'register') {
-      // on register flow, you might want to prefill and return to register page
       window.location.href = '/gemini.html';
     } else {
       window.location.href = '/gemini.html';
     }
     return;
   } catch (err) {
-    console.error('Server verification failed, falling back to client-side storage:', err);
+    console.warn('Server verification failed or unavailable, falling back to client-only flow:', err);
     // fallback: store locally (non-secure) and continue
-    localStorage.setItem('google_id_token', idToken);
-    localStorage.setItem('google_user', JSON.stringify(user));
-    if (options.after === 'register') {
-      // prefill register fields if present
-      const nameEl = document.getElementById('fullname');
-      const emailEl = document.getElementById('regEmail');
-      if (nameEl && user.name) nameEl.value = user.name;
-      if (emailEl && user.email) emailEl.value = user.email;
-      return;
+    try {
+      localStorage.setItem('google_id_token', idToken);
+      localStorage.setItem('google_user', JSON.stringify(user));
+      if (user.name) localStorage.setItem('userName', user.name);
+      if (user.email) localStorage.setItem('userEmail', user.email);
+
+      if (options.after === 'register') {
+        const nameEl = document.getElementById('fullname');
+        const emailEl = document.getElementById('regEmail');
+        if (nameEl && user.name) nameEl.value = user.name;
+        if (emailEl && user.email) emailEl.value = user.email;
+        return;
+      }
+
+      window.location.href = '/gemini.html';
+    } catch (e) {
+      console.error('Fallback local storage failed', e);
     }
-    window.location.href = '/gemini.html';
   }
 };
 
@@ -70,10 +108,10 @@ window.handleGoogleCredential = async function(response, options = { after: 'log
 window.googleSignOut = function() {
   localStorage.removeItem('google_id_token');
   localStorage.removeItem('google_user');
-  localStorage.removeItem('isLoggedIn');
+  localStorage.removeItem('userName');
+  localStorage.removeItem('userEmail');
   if (window.google && google.accounts && google.accounts.id) {
     google.accounts.id.disableAutoSelect();
   }
-  // also call server signout endpoint if you implement it
-  window.location.href = '/';
+  window.location.href = '/login.html';
 };
